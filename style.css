@@ -1,0 +1,388 @@
+/*
+Theme Name:       Divi Cinematic
+Description:      A modified version of Divi commissioned for a Canadian theatre. Has a robust movie listing post type that automatically retrieves movie details, poster, etc.
+Author:           scfrsn
+Author URI:       https://github.com/scfrsn
+Theme URI:        https://github.com/scfrsn/Divi-Cinematic
+Template:         divi
+Version:          1.4
+
+CSS Structure
+----------------
+1. Movies (index pages and single pages)
+   - Page Structure
+   - Movie Listing Popup
+   - No-listings Message
+2. Parent Theme Tweaks
+   - Header
+   - Footer
+3. Plugin Tweaks
+   - Newsletter
+3. Media Queries
+   - More than 980px
+   - Less than 980px
+   - More than 767px
+   - Less than 767px
+*/
+
+@import url("../Divi/style.css");
+
+/*==========================================*/
+/* 1. MOVIES (INDEX PAGES AND SINGLE PAGES) */
+/*==========================================*/
+
+  /*==================*/
+  /* - PAGE STRUCTURE */
+  /*==================*/
+
+  #main-content {
+    min-height: 300px; /* Prevent an ugly 'collapsed' view when there's little or no content */
+  }
+  .single-movies #content-area {
+    padding-bottom: 50px; /* No padding otherwise */
+  }
+  .page-template-page-movies-php #main-content .container::before,
+  .single-movies #main-content .container::before {
+    display: none; /* Hides the sidebar */
+  }
+
+  /*=======================*/
+  /* - MOVIE LISTING POPUP */
+  /*=======================*/
+
+  .movie_details {
+    margin-bottom: 0;
+  }
+  .movie_details h2 {
+    margin-top: 0;
+  }
+  .movie_info { /* Contains the showtimes, notes, etc. */
+    font-size: 18px;
+    line-height: 26px;
+    color: #eee;
+    background: #000;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  .movie_info div {
+    padding: 20px; /* Add padding to all inner divs */
+  }
+  .runtime {
+    font-size: 14px;
+  }
+  .rating-image { /* G, PG, 14A, etc. */
+    height: 28px;
+    width: 28px;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+  /* The actual visible popup container */
+  .white_popup {
+    position: relative;
+    background: #fff;
+    width: 98%;
+    max-width: 900px;
+    margin: 2% auto;
+  }
+  .white_popup a {
+    color: #333;
+  }
+  .white_popup a:hover {
+    color: #000;
+  }
+  .white_popup_top {
+    padding: 20px;
+    display: table;
+  }
+  .white_popup_bottom {
+    clear: both;
+  }
+
+  /*=======================*/
+  /* - NO-LISTINGS MESSAGE */
+  /*=======================*/
+
+  .no-movies {
+    text-align:	center;
+    padding-bottom: 200px;
+    padding-top: 200px;
+  }
+  .no-movies h1 {
+    font-weight: bold;
+    color: #fff;
+  }
+  .no-movies p {
+    font-size: 20px;
+    color: #fff;
+  }
+
+/*========================*/
+/* 2. PARENT THEME TWEAKS */
+/*========================*/
+
+  /* Page should be full-width until it reaches 1200px */
+  #page-container {
+    width: 100% !important;
+    max-width: 1200px;
+  }
+
+  /*==========*/
+  /* - HEADER */
+  /*==========*/
+
+  #logo {
+    height: auto;
+    max-height: 100% !important; /* Fix image height in mobile */
+    width: 100%;
+    margin-bottom: 0px;
+    /* Remove transitions to prevent jumpy resizing from media queries */
+    -moz-transition: none;
+    -webkit-transition: none;
+    transition: none;
+  }
+  .logo_container {
+    height: inherit !important; /* Fit the banner image height */
+    max-height: none !important; /* Fix image height in mobile */
+  }
+  .logo_helper {
+    display: none !important; /* Not sure what this is but it leaves above the banner */
+  }
+  #top-header {
+    display: none; /* Hide the secondary menu above the banner */
+  }
+  #main-header {
+    padding: 0 !important; /* Remove the padding around the banner */
+    /* 'Inset' shadow for the content arrow */
+    -webkit-box-shadow: 0px -10px 20px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px -10px 20px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px -10px 20px 0px rgba(0,0,0,0.5);
+  }
+  #main-header .container { /* Remove side padding on header banner */
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /*==========*/
+  /* - FOOTER */
+  /*==========*/
+
+  /* Design company logo */
+  #onetrix {
+    height: 15px;
+    margin-left: 2px;
+    vertical-align: -10%;
+  }
+  /* Replacing the margin/max-width setup with 100% width and padding
+     so we can have a full-coverage background in the widget area */
+  #main-footer > .container { /* It's important to target only the first footer container */
+    background-image: url('assets/images/background.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    background-size: 100%;
+    -moz-background-size: cover !important;
+    -webkit-background-size: cover !important;
+    background-size: cover !important;
+    width: 100% !important;
+  }
+  #footer-widgets { /* This is a container around the widgets */
+    margin: 0 auto;
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+  /* Footer widget images should fill the widget width */
+  .footer-widget img,
+  .footer-widget .widget_sp_image {
+    max-width: 100%;
+    width:100%;
+  }
+  .footer-widget .et_pb_widget a {
+    color: inherit; /* Override this class's link color (default: #666) */
+  }
+
+/*==================*/
+/* 3. PLUGIN TWEAKS */
+/*==================*/
+
+  /*==============*/
+  /* - NEWSLETTER */
+  /*==============*/
+  /* Plugin: https://wordpress.org/plugins/newsletter/ */
+
+  .footer-widget .newsletter-submit {
+    /* These styles were copied from the Divi button class .et_pb_button */
+    display: block;
+    background: rgba(255, 255, 255, 0.6);
+    color: inherit;
+    padding: 6px 0;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
+    font-size: 20px;
+    font-weight: 500;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 6px 20px;
+    margin-top: 0 !important;
+    line-height: 1.7em;
+    background: transparent;
+    border: 2px solid;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -moz-transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+    position: relative;
+    cursor: pointer;
+  }
+  .footer-widget .newsletter-submit:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid transparent;
+  }
+  .footer-widget .newsletter-email {
+    font-size: 14px;
+    border: none;
+    padding: 14px 4%;
+    font-size: 16px;
+    color: #666;
+    background-color: #fff;
+    width: 100%;
+    font-weight: 400;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+  }
+
+/*==================*/
+/* 4. MEDIA QUERIES */
+/*==================*/
+
+  /*===================*/
+  /* - More than 980px */
+  /*===================*/
+
+  @media only screen and (min-width: 981px) {
+    /* Main menu */
+    #top-menu li {
+      font-size: 18px;
+      padding: 20px 22px 20px 0;
+    }
+    #top-menu li > a {
+      padding-bottom: 0 !important;
+    }
+    #top-menu li.current-menu-ancestor > a,
+    #top-menu li.current-menu-item > a {
+      font-weight: bold; /* For some reason Divi doesn't have this an option */
+    }
+    /* Content area */
+    .page-template-page-movies-php #main-content .container {
+      overflow: hidden; /* Keep the poster stack from inside the content area */
+    }
+    .page-template-page-movies-php #content-area {
+      padding: 30px 60px;
+    }
+    /* Poster stack */
+    .poster {
+      float: left;
+      position: relative;
+    }
+    .poster:hover {
+      top: 0 !important; /* Slide the poster up into view */
+      z-index: 101 !important; /* Bring it to the front of the poster stack */
+    }
+  }
+
+  /*===================*/
+  /* - Less than 980px */
+  /*===================*/
+
+  @media only screen and (max-width: 980px) {
+    #main-header #et_mobile_nav_menu {
+      margin-top: 0;
+      padding: 5px;
+    }
+    .et_mobile_menu {
+      top: 43px; /* There's a gap at the top of the menu otherwise */
+    }
+    .et_mobile_menu .current-menu-item a {
+      font-weight: bold;
+    }
+    .et_mobile_menu li a:hover {
+      color: #fff; /* Default is black, doesn't really work with our theme */
+    }
+    .et_header_style_centered .mobile_nav .select_page {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    #main-content .container {
+      /* Strip the padding so the poster row fills the content area */
+      padding: 0 !important;
+      width: 100% !important;
+    }
+    #main-content {
+      min-height: 0; /* Let the poster rows fill the content area */
+    }
+    .poster {
+      float: left;
+      min-width: 25%; /* We don't want more than 4 posters per row in mobile view */
+      /* Remove the transforms to straighten them out */
+      transform: none !important;
+      -webkit-transform: none !important;
+      -moz-transform: none !important;
+      -o-transform: none !important;
+      -ms-transform: none !important;
+    }
+  }
+
+  /*===================*/
+  /* - More than 767px */
+  /*===================*/
+
+  @media only screen and (min-width: 768px) {
+    .movie_details {
+      max-width: 75%;
+      padding-left: 20px;
+      margin-bottom: 60px;
+    }
+    .movie_details, .movie_poster {
+      float: left;
+      display: inline-block;
+    }
+    .movie_info {
+      display: inline-block;
+    }
+    .movie_poster {
+      max-width: 25%;
+      height: auto;
+      position: relative;
+      top: -18px;
+      left: -65px;
+      /* Tilt the poster image in the popup */
+      transform: rotate(-5deg) ;
+      -webkit-transform: rotate(-5deg) ;
+      -moz-transform: rotate(-5deg) ;
+      -o-transform: rotate(-5deg) ;
+      -ms-transform: rotate(-5deg) ;
+    }
+    .movie_poster img {
+      max-width: 130%;
+      border: 4px #fff solid;
+      box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.4);
+      -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.4);
+      -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.4);
+    }
+  }
+
+  /*===================*/
+  /* - Less than 767px */
+  /*===================*/
+
+    /* Movie popup poster should fill the popup width */
+    .movie_poster img {
+      margin-bottom: 30px;
+      margin-top: 20px;
+      width: 100%;
+    }
+  }

@@ -1,0 +1,131 @@
+/* PRIMARY BUTTON STYLES */
+
+.introjs-button {
+	color: #555;
+	border-color: #ccc;
+	background: #f7f7f7;
+	-webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+	box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+	text-shadow: none;
+	text-decoration: none;
+	height: 30px;
+	line-height: 28px;
+	padding: 0 12px 2px;
+	display: inline-block;
+	text-decoration: none;
+	font-size: 13px;
+	line-height: 26px;
+	height: 28px;
+	margin: 0;
+	padding: 0 10px 1px;
+	cursor: pointer;
+	border-width: 1px;
+	border-style: solid;
+	-webkit-appearance: none;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	white-space: nowrap;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box
+}
+
+/* PRIMARY BUTTON STATES */
+
+.introjs-button:hover {
+	background: #fafafa;
+	border-color: #999;
+	color: #23282d;
+	border-color: #ccc;
+	-webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+	box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+}
+.introjs-button:active {
+	background: #eee;
+	border-color: #999;
+	color: #32373c;
+	-webkit-box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, .5);
+	box-shadow: inset 0 2px 5px -3px rgba(0, 0, 0, .5)
+}
+.introjs-button:focus {
+	focus: none;
+	color: #555;
+	border-color: #ccc;
+	background: #f7f7f7;
+	-webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+	box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0, 0, 0, .08);
+}
+.introjs-disabled, .introjs-disabled:hover, .introjs-disabled:focus {
+	color: #a0a5aa !important;
+	border-color: #ddd !important;
+	background: #f7f7f7 !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	text-shadow: 0 1px 0 #fff !important;
+	cursor: default
+}
+
+/* SKIP BUTTON STYLES */
+
+.introjs-skipbutton {
+  margin-right: 5px;
+	float: left;
+}
+
+/* BUTTON GROUPING */
+
+.introjs-prevbutton {
+  -webkit-border-radius: 0.2em 0 0 0.2em;
+  -moz-border-radius: 0.2em 0 0 0.2em;
+  border-radius: 0.2em 0 0 0.2em;
+  border-right: none;
+}
+.introjs-nextbutton {
+  -webkit-border-radius: 0 0.2em 0.2em 0;
+  -moz-border-radius: 0 0.2em 0.2em 0;
+  border-radius: 0 0.2em 0.2em 0;
+}
+
+/* PROGRESS BAR */
+
+.introjs-progress {
+  margin: 20px 0;
+}
+.introjs-progressbar {
+  background-color: #00a0d2;
+}
+
+/* BULLETS */
+
+.introjs-bullets ul li a.active {
+  background-color: #00a0d2;
+}
+.introjs-bullets ul li a {
+	margin: 0px 0 15px 0;
+	width: 10px;
+	height: 4px;
+}
+
+/* BADGE NUMBER */
+
+.introjs-helperNumberLayer {
+	position: absolute;
+	top: -16px;
+	left: -16px;
+	z-index: 9999999999 !important;
+	padding: 2px;
+	font-family: Arial, verdana, tahoma;
+	font-size: 13px;
+	font-weight: bold;
+	color: white;
+	text-align: center;
+	text-shadow: none;
+	background: #ff3019 !important;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	border: 3px solid #fff;
+	border-radius: 50%
+	filter: none
+	box-shadow: none;
+}

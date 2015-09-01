@@ -1,0 +1,62 @@
+.status-light {
+	background-image: none;
+	background-color: #FFC107;
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	margin: 6px 8px 0 6px !important;
+}
+.rating-icon {
+	width:20px;
+	height:20px;
+	margin-bottom:-5px;
+	margin-right:3px;
+}
+#poststuff .inside > h3 {
+	font-size: 14px;
+	padding: 8px 0;
+}
+#poststuff .inside textarea {
+	width: 100%;
+	max-width: 100%;
+	vertical-resize: yes;
+}
+#poststuff .inside .schedule-label {
+	width: 100px;
+	display: inline-block;
+	margin-right: 8px;
+}
+#poststuff .inside .postbox-container {
+	margin-top:20px;
+}
+#trailer-frame {
+	width: 100%;
+}
+#website-frame {
+	width: 100%;
+	margin-top: 10px;
+}
+input[name=start_date],
+input[name=end_date] {
+	width: 160px;
+}
+input[name=early],
+input[name=late],
+input[name=special],
+input[name=matinee] {
+	width: 120px;
+}
+input[name=trailer],
+input[name=website],
+input[name=rating_description] {
+	width: 100%;
+}
+input[name=runtime_minutes] {
+	width: 80px;
+}
+label[for=early],
+label[for=end_date],
+label[for=late] {
+	margin-left: 8px;
+	margin-right: 8px;
+}
