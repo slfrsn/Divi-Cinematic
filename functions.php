@@ -107,12 +107,6 @@ function tutorial_scripts($hook) {
 	if($hook != 'newsletter_page_newsletter_emails_index' && $hook != 'admin_page_newsletter_emails_edit' && $hook != 'post.php' && $hook != 'post-new.php' && $hook != 'edit.php') {
 		return;
   }
-
-  // // Load the latest jQuery
-  // wp_deregister_script('jquery');
-	// wp_register_script('jquery', ("http://code.jquery.com/jquery-latest.min.js"), false, '');
-	// wp_enqueue_script('jquery');
-
 	wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
 	wp_enqueue_style ( 'tutorial-intro-theme-css', get_stylesheet_directory_uri() . '/assets/css/intro-theme.css' );
   wp_enqueue_script( 'tutorial_intro', get_stylesheet_directory_uri() . '/assets/js/intro.js' );
