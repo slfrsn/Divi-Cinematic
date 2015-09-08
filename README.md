@@ -1,6 +1,6 @@
 # Divi Cinematic
 
-![Travis Build Status](https://api.travis-ci.org/scfrsn/Divi-Cinematic.svg?branch=master)
+[![Build Status](https://travis-ci.org/scfrsn/Divi-Cinematic.png)](https://travis-ci.org/scfrsn/Divi-Cinematic)
 
 A WordPress child theme based on [Divi][1]. Commissioned for a local Canadian theatre. It has a robust movie listing post type that automatically retrieves movie details, poster, etc.
 
