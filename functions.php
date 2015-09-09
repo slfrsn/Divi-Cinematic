@@ -131,7 +131,7 @@ add_action('wp_head', 'buffer_start');
 add_action('wp_footer', 'buffer_end');
 function callback($buffer) {
 	$source  = '#<p id="footer-info">(.*?)</p>#s';
-	$replace = '<p id="footer-info">'.sprintf( __( 'Designed & Powered by %1$s', 'divi-cinematic' ), '<a href="http://www.onetrix.com"><img src="'.get_stylesheet_directory_uri().'/assets/images/onetrix.png" alt="O-Netrix Solutions" title="O-Netrix Solutions" id="onetrix" />' ).'</p>';
+	$replace = '<p id="footer-info">'.sprintf( __( 'Designed & Powered by %1$s', 'divi-cinematic' ), '<a href="http://www.onetrix.com"><img src="'.get_stylesheet_directory_uri().'/assets/images/onetrix.png" alt="O-Netrix Solutions" title="O-Netrix Solutions" id="onetrix" /></a>' ).'</p>';
   return preg_replace($source,$replace,$buffer);
 }
 function buffer_start() { ob_start("callback"); }

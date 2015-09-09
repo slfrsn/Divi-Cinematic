@@ -378,7 +378,7 @@ if (!function_exists('movies_post_type')) {
 	// Enqueue the script for loading movie details in a popup
 	add_action( 'wp_enqueue_scripts', 'page_movies_script' );
 	function page_movies_script() {
-    if (is_front_page()) {
+    if (is_page_template( 'page-movies.php' ) ) {
 			wp_enqueue_script( 'page_movies', get_stylesheet_directory_uri() . '/assets/js/page-movies.js' );
 		}
 	}
