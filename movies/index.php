@@ -157,11 +157,11 @@ if (!function_exists('movies_post_type')) {
 			$current_date = strtotime('today');
 
 			// Status Conditions
-			if (!empty($start_date) && ($current_date >= $start_date) && (($current_date <= $end_date) || (empty($end_date)))) { $column_data = 'Now Playing';	}
-			if (empty($start_date)) { $column_data = '<span style="color:#ff0000;">Missing start date</span>';	}
+			if (!empty($start_date) && ($current_date >= $start_date) && (($current_date <= $end_date) || (empty($end_date)))) { $column_data = '<strong>Now Playing</strong>'; }
+			if (empty($start_date)) { $column_data = '<span style="color:#dd3d36;">Missing start date</span>';	}
 			if (($current_date < $start_date)) { $column_data = 'Coming Soon';	}
-			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#ff0000;">Expired</span>';	}
-			if (get_post_status ($post_ID ) != 'publish' ) { $column_data = '<span style="color:#aaaaaa;">Not published</span>';	}
+			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#dd3d36;">Expired</span>';	}
+			if (get_post_status ($post_ID ) != 'publish' ) { $column_data = '<span style="color:#aaa;">Not published</span>';	}
 			if (get_post_status ($post_ID ) == 'future' ) { $column_data = 'Scheduled';	}
 
 			echo $column_data;
