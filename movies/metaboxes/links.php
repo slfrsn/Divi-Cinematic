@@ -16,7 +16,7 @@ function movie_links_content($post) {
 	<p>Please enter the YouTube URL of an official movie trailer.</p>
 	<p><input type="url" name="trailer" placeholder="Official trailer..." value="<?=$trailer?>" /></p>
 
-	<label for="trailer_confirm">
+	<label>
 		<input type="checkbox" name="trailer_confirm" value="yes" <?=echo_checkbox($meta['trailer_confirm'][0],'yes')?>>
 		Yes, this is the correct trailer for this movie.
 	</label>
@@ -46,7 +46,7 @@ function movie_links_content($post) {
 	<p>Please enter the URL of the official movie website.</p>
 	<p><input type="url" name="website" placeholder="Official website..." value="<?=$website?>" /></p>
 
-	<label for="website_confirm">
+	<label>
 		<input type="checkbox" name="website_confirm" value="yes"  <?=echo_checkbox($meta['website_confirm'][0],'yes')?>>
 		Yes, this is the correct website for this movie.
 	</label>

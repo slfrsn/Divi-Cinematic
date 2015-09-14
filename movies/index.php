@@ -292,7 +292,8 @@ if (!function_exists('movies_post_type')) {
 		$movie 			 = $movie_obj['movie'];
 
 		// Set the variables
-		if (!empty($movie_obj))				  { update_post_meta($_POST['id'], 'json_response', 	 json_encode($movie_obj)); }
+		// Using addcslashes() to double escape quotes sometimes returned in the synopsis
+		if (!empty($movie_obj))				  { update_post_meta($_POST['id'], 'json_response', addcslashes($api_request, '"')); }
 		if (!empty($movie['duration'])) { update_post_meta($_POST['id'], 'runtime_minutes',  $movie['duration']); }
 		if (!empty($movie['synopsis'])) { update_post_meta($_POST['id'], 'description', 		 $movie['synopsis']); }
 		if (!empty($movie['cast']))		  { update_post_meta($_POST['id'], 'starring', 			   $movie['cast']); }

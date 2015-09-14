@@ -61,7 +61,7 @@ jQuery(document).ready(function($){
 		if ($(this).hasClass('closed')) {
 			$('#website-frame').attr('src', null);
 		} else {
-			var src = $('#website').val();
+			var src = $('input[name=website]').val();
 			$('#website-frame').attr('src', src);
 		}
   });

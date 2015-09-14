@@ -14,14 +14,14 @@ jQuery(document).ready(function($){
 						position: 'bottom-right-aligned'
 	        },
 	        {
-	          element:  '#movie_schedule',
-	          intro: 	  'Enter the movie schedule details.<br><br><strong>Note:</strong> If you need to add a second showtime to the matinees, enter it like this:<br><strong>2:00 PM, 4:00PM</strong><br><br>If you need to specify that a showing is in 3D, enter it like this:<br><strong>6:30 PM (3D)</strong>',
-						position: 'right'
-	        },
-	        {
 	          element: 	'.fetch-details',
 	          intro: 		'Click this button to fetch the movie details. The page <em>should</em> reload with everything filled out correctly.<br><br><strong>Note:</strong> This feature depends on Google to work and it can be... <em>unpredictable</em>. If it isn\'t working for a movie, you\'ll have to search for the information on Google and enter it manually.<br><br>The API status light gives us a way to see if the source for <strong>Fetch Movie Details</strong> is online. If the light is amber or red, you might be on your own.',
 						position: 'left'
+	        },
+	        {
+	          element:  '#movie_schedule',
+	          intro: 	  'Enter the movie schedule details.<br><br><strong>Note:</strong> If you need to add a second showtime to the matinees, enter it like this:<br><strong>2:00 PM, 4:00PM</strong><br><br>If you need to specify that a showing is in 3D, enter it like this:<br><strong>6:30 PM (3D)</strong>',
+						position: 'right'
 	        },
 	        {
 	          element:  '#movie_details',
