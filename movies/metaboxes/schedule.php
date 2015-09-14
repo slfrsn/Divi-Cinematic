@@ -14,13 +14,14 @@ function movie_schedule_content($post) {
 	$defaults_late = get_theme_mod('divi-cinematic-late', '9:00 PM');
 	$defaults_matinee = get_theme_mod('divi-cinematic-matinee', '2:00 PM');
 
+	// Check for the 'has_saved' flag
 	if (!$meta['has_saved'][0]) {
 		// Only use the default showtimes if the listing hasn't been saved yet
 		// (to prevent the default showtimes from overwriting empty showtimes)
 		$meta['early'][0] = $defaults_early;
 		$meta['late'][0] = $defaults_late;
 		$meta['matinee'][0] = $defaults_matinee;
-	}
+  }
 	// Determine start date
 	if (isset($meta['start_date']) && ($meta['start_date'][0] != '')) {
 		$meta['start_date'][0] = date('M. j, Y',$meta['start_date'][0]);
@@ -49,14 +50,14 @@ function movie_schedule_content($post) {
 	<p>Please enter the nightly and matinee show times in HH:MM PM format (e.g. 7:15 PM). For exceptions, please add them to the "Other times or notes..." field.</p>
 	<p>
 		<span class="schedule-label">Nightly:</span>
-		<input type="text" name="early" value="<?=echo_var($meta['early'][0],$defaults_early)?>" placeholder="e.g. <?=$defaults_early?>"/>
+		<input type="text" name="early" value="<?=$meta['early'][0]?>" placeholder="e.g. <?=$defaults_early?>"/>
 		<label for="early">Early</label>
-		<input type="text" name="late" value="<?=echo_var($meta['late'][0],$defaults_late)?>" placeholder="e.g. <?=$defaults_late?>"/>
+		<input type="text" name="late" value="<?=$meta['late'][0]?>" placeholder="e.g. <?=$defaults_late?>"/>
 		<label for="late">Late</label>
 	</p>
 
 	<p><span class="schedule-label">Matinees:</span>
-	<input type="text" name="matinee" value="<?=echo_var($meta['matinee'][0],$defaults_matinee)?>" placeholder="e.g. <?=$defaults_matinee?>"/></p>
+	<input type="text" name="matinee" value="<?=$meta['matinee'][0]?>" placeholder="e.g. <?=$defaults_matinee?>"/></p>
 
 	<p><span class="schedule-label">Special:</span>
 	<input type="text" name="special" value="<?=echo_var($meta['special'][0])?>" placeholder="e.g. 2:00 PM"/></p>
@@ -86,12 +87,14 @@ function movie_schedule_meta_save($post_id) {
 		return;
 	}
 	// Set a custom value to indicate the post has been saved at least once
-	update_post_meta($post_id, 'has_saved', 1);
+	if (isset($_POST['post_title'])) {
+		update_post_meta($post_id, 'has_saved', 1);
+	}
 	// Check for input and sanitizes/saves if needed
-	save_if_changed('early', $post_id, true);
-	save_if_changed('late', $post_id, true);
-	save_if_changed('matinee', $post_id, true);
-	save_if_changed('special', $post_id, true);
+	if(isset($_POST['early'])) { update_post_meta($post_id, 'early', $_POST['early']); }
+	if(isset($_POST['late'])) { update_post_meta($post_id, 'late', $_POST['late']); }
+	if(isset($_POST['matinee'])) { update_post_meta($post_id, 'matinee', $_POST['matinee']); }
+	if(isset($_POST['special'])) { update_post_meta($post_id, 'special', $_POST['special']); }
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
 	if(!isset($_POST['end_date']) || $_POST['end_date'] == "") { update_post_meta($post_id, 'end_date', 246767472000); }
