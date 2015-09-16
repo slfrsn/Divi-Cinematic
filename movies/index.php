@@ -168,6 +168,34 @@ if (!function_exists('movies_post_type')) {
 		}
 	}
 
+	// Register the Date Columns as Sortable
+	add_filter("manage_edit-movies_sortable_columns", 'status_column_sortable');
+	function status_column_sortable($columns) {
+		$columns['start_date'] = 'start_date';
+		$columns['end_date'] = 'end_date';
+		return $columns;
+	}
+
+	// Handle the Date Column Sorting
+	add_filter( 'request', 'price_column_orderby' );
+	function price_column_orderby( $vars ) {
+		// Sort by Start Date
+	  if (isset($vars['orderby']) && 'start_date' == $vars['orderby']) {
+	    $vars = array_merge($vars, array(
+	      'meta_key' => 'start_date',
+	      'orderby' => 'meta_value_num'
+	    ));
+	  }
+		// Sort by End Date
+	  if (isset($vars['orderby']) && 'end_date' == $vars['orderby']) {
+	    $vars = array_merge($vars, array(
+	      'meta_key' => 'end_date',
+	      'orderby' => 'meta_value_num'
+	    ));
+	  }
+	  return $vars;
+	}
+
 	// Remove Tags
 	add_action('init', 'movie_tags');
 	function movie_tags() {
