@@ -16,34 +16,40 @@ function movie_details_content($post) {
 
 	<h3>Rating</h3>
 	<p>
-		<label for="rating-g">
-			<input type="radio" name="rating" value="g" <?=echo_checkbox($meta['rating'][0],'g')?>>
+		<label>
+			<input type="radio" name="rating" value="G" <?=echo_checkbox($meta['rating'][0],'G')?>>
 			<img src="<?=$ratings_directory?>/g.png" class="rating-icon" title="G">
 		</label>
-		<label for="rating-pg">
-			<input type="radio" name="rating" value="pg" <?=echo_checkbox($meta['rating'][0],'pg')?>>
+		<label>
+			<input type="radio" name="rating" value="PG" <?=echo_checkbox($meta['rating'][0],'PG')?>>
 			<img src="<?=$ratings_directory?>/pg.png" class="rating-icon" title="PG">
 		</label>
-		<label for="rating-14a">
-			<input type="radio" name="rating" value="14a" <?=echo_checkbox($meta['rating'][0],'14a')?>>
+		<label>
+			<input type="radio" name="rating" value="14A" <?=echo_checkbox($meta['rating'][0],'14A')?>>
 			<img src="<?=$ratings_directory?>/14a.png" class="rating-icon" title="14A">
 		</label>
-		<label for="rating-18a">
-			<input type="radio" name="rating" value="18a" <?=echo_checkbox($meta['rating'][0],'18a')?>>
+		<label>
+			<input type="radio" name="rating" value="18A" <?=echo_checkbox($meta['rating'][0],'18A')?>>
 			<img src="<?=$ratings_directory?>/18a.png" class="rating-icon" title="18A">
 		</label>
-		<label for="rating-r">
-			<input type="radio" name="rating" value="r" <?=echo_checkbox($meta['rating'][0],'r')?>>
+		<label>
+			<input type="radio" name="rating" value="R" <?=echo_checkbox($meta['rating'][0],'R')?>>
 			<img src="<?=$ratings_directory?>/r.png" class="rating-icon" title="R">
 		</label>
-		<label for="rating-a">
-			<input type="radio" name="rating" value="a" <?=echo_checkbox($meta['rating'][0],'a')?>>
+		<label>
+			<input type="radio" name="rating" value="A" <?=echo_checkbox($meta['rating'][0],'A')?>>
 			<img src="<?=$ratings_directory?>/a.png" class="rating-icon" title="A">
 		</label>
+		<?php if (isset($meta['json_response'])) { ?>
+			<a class="button" id="rating-confirm">Confirm Film Rating</a><span id="rating-spinner" class="spinner"></span>
+			<div id="rating-response" class="">
+				<p>
+					<span></span>
+					<a href="http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle=<?=urlencode(the_title())?>" target="_blank">Open website to confirm</a>
+				</p>
+			</div>
+		<?php } ?>
 	</p>
-
-	<p>Please enter a rating description below.</p>
-	<p><input type="text" name="rating_description" placeholder="Rating Description..." value="<?=echo_var($meta['rating_description'][0])?>" /></p>
 
 	<h3>Cast</h3>
 	<p><textarea name="starring" rows="5" placeholder="Starring..."><?=echo_var($meta['starring'][0])?></textarea></p>
@@ -73,7 +79,6 @@ function movie_details_meta_save($post_id) {
 	// Check for input and sanitizes/saves if needed
 	save_if_changed('starring', $post_id, true);
 	save_if_changed('rating', $post_id, false);
-	save_if_changed('rating_description', $post_id, true);
 	save_if_changed('runtime_minutes', $post_id, true);
 	save_if_changed('description', $post_id, true);
 	if(isset($_POST['genres'])) { // Run through each genre and apply it programmatically

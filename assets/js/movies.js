@@ -1,4 +1,5 @@
 jQuery(document).ready(function($){
+
 	// Turn the status light into a spinner
 	$('#api_spinner').addClass('status-light').css('visibility','visible');
 	// Check the status of our movie API
@@ -11,6 +12,40 @@ jQuery(document).ready(function($){
 		  $('#api_status').text('API is offline');
 		}
 	});
+
+	// Confirm film rating via AJAX
+  // This scrapes the Consumer Protection BC website to grab the first result
+  // It's pretty ghetto, so we need to make sure it degrades gracefully
+	$('#rating-confirm').click(function(e) {
+		e.preventDefault(); // Prevent the link from doing it's thing
+		$('#rating-spinner').css('visibility','visible');
+		var dataRating = {
+	    action: 'movie_confirm_film_rating',
+      title: $('#title').val()
+		};
+  	$.post(ajaxurl, dataRating, function(response) {
+      $('#rating-spinner').css('visibility','hidden');
+      if(response) {
+        // Find the second cell on the second row of the second table (I know, right?!)
+        var found = $('.searchlicense:eq(2) tr:nth-child(2) td:nth-child(2)', $(response)).html();
+        // Update the response message
+        $('#rating-response span').html('Response received as: ' + found + '. ');
+        // Add the classes and show the message
+        // We add the classes with javascript because if we don't WordPress
+        // will move it to the top of the page
+        $('#rating-response').addClass('notice notice-success').show();
+        // If `found` returns null we need to forward the user to the page
+        if (!found) {
+          $('#rating-response span').html('No response received. ');
+          $('#rating-response').addClass('notice notice-error').show();
+        }
+  		} else {
+        $('#rating-response span').html('No response received. ');
+        $('#rating-response').addClass('notice notice-error').show();
+  		}
+  	});
+	});
+
 
 	// Load the movie details via AJAX call
 	$('#load_movie').click(function(e) {

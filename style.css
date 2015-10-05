@@ -67,14 +67,18 @@ CSS Structure
   .movie_info div {
     padding: 20px; /* Add padding to all inner divs */
   }
-  .runtime {
+  .movie_small_details {
     font-size: 14px;
+    line-height: 14px;
   }
   .rating-image { /* G, PG, 14A, etc. */
     height: 28px;
     width: 28px;
     margin-right: 5px;
     vertical-align: middle;
+  }
+  .movie_notes {
+    background-color: #333;
   }
   /* The actual visible popup container */
   .white_popup {

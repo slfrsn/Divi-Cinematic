@@ -85,6 +85,29 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// =============================
+	// ADVISORIES TAXONOMY
+	// =============================
+
+	add_action('init', 'movies_advisories', 0);
+	function movies_advisories() {
+		register_taxonomy(
+			'advisory',
+			'movies',
+			array(
+				'labels' => array(
+					'name' => 'Advisories',
+					'add_new_item' => 'Add New Advisory',
+					'new_item_name' => "New Advisory"
+				),
+				'show_admin_column' => false,
+				'show_ui' => true,
+				'show_tagcloud' => false,
+				'hierarchical' => true
+			)
+		);
+	}
+
+	// =============================
 	// FEATURES TAXONOMY
 	// =============================
 
@@ -290,7 +313,7 @@ if (!function_exists('movies_post_type')) {
 				<div id="major-publishing-actions" style="overflow:hidden">
 					<div id="publishing-action" class="fetch-details" style="width:100%">
 						<span style="float:left;position:relative;top:3px">
-							<span id="api_spinner" class="spinner" style="margin: 1px 4px 0 0"></span>
+							<span id="api_spinner" class="spinner"></span>
 							<span id="api_status">Checking...</span>
 						</span>
 						<a class="button-primary" id="load_movie" data-url="'.$api_url.'">Fetch Movie Details</a>
@@ -300,12 +323,52 @@ if (!function_exists('movies_post_type')) {
 		}
 	}
 
+	// Convert American film ratings to the nearest Canadian (BC) equivalents
+	function convert_film_rating($rating, $return_description) {
+		// Convert the input to all-caps
+		$rating = strtoupper($rating);
+		// Strip any hyphens from the rating
+		$rating = str_replace("-", "", $rating);
+		// Our list of American to Canadian (BC) conversions
+		// NOTE: This isn't an exact science. The conversions are based off of
+		// personal experience from updating theatre listings on a weekly basis.
+		//
+		$conversions = [
+			'G' 		=> [ 'G',   'Suitable for viewing by persons of all ages' ],
+			'PG' 		=> [ 'PG',  'Parental guidance advised' ],
+			'PG13'  => [ '14A', 'Suitable for persons 14 years of age or older' ],
+			'R' 		=> [ '14A', 'Persons under 18 years of age must view these motion pictures accompanied by an adult' ],
+			'NC17'  => [ '18A', 'Restricted to persons 18 years of age and over' ]
+		];
+		// Check if the rating exists in our conversion list
+		if(array_key_exists($rating,$conversions)) {
+			$code = $conversions[$rating][0]; // Assign the converted rating code
+			$description = $conversions[$rating][1]; // Assign the appropriate rating description
+		} else {
+			// No match, set rating code and description as NA
+			$code = 'NA';
+			$description = 'NA';
+		}
+		// If true, return the rating description instead of the rating code
+		if ($return_description) { return $description; }
+		// Return the converted rating code
+		return $code;
+	}
+
+	// Confirm film rating via AJAX
+	add_action( 'wp_ajax_movie_confirm_film_rating', 'movie_confirm_film_rating_ajax' );
+	function movie_confirm_film_rating_ajax() {
+		$cpbc_url = 'http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle='.urlencode($_POST['title']);
+		echo file_get_contents($cpbc_url);
+		wp_die();
+	}
+
 	// Check API status via AJAX
 	add_action( 'wp_ajax_movie_api_status', 'movie_api_status_ajax' );
 	function movie_api_status_ajax() {
 		$api_url		  = get_stylesheet_directory_uri().'/movies/api.php?status';
 		$api_request  = file_get_contents($api_url);
-		$api_response = json_decode($api_request,true);
+		$api_response = json_decode($api_request, true);
 		echo $api_response['status'];
 		wp_die();
 	}
@@ -328,11 +391,8 @@ if (!function_exists('movies_post_type')) {
 		if (!empty($movie['trailer']))  { update_post_meta($_POST['id'], 'trailer', 				 $movie['trailer']); }
 		if (!empty($movie['website']))  { update_post_meta($_POST['id'], 'website', 				 $movie['website']); }
 		if (!empty($movie['rating']))   {
-			// Make sure the rating we get exists and apply it if it does
-			$ratings = array("G","PG","PG13","PG-13","14A","14-A","18A","18-A","R","A");
-			if(in_array($movie['rating'],$ratings)) {
-				update_post_meta($_POST['id'], 'rating', strtolower($movie['rating']));
-			}
+			update_post_meta($_POST['id'], 'rating', convert_film_rating($movie['rating'], false));
+			update_post_meta($_POST['id'], 'rating_description', convert_film_rating($movie['rating'], true));
 		}
 		// Build the genre string to use in a hidden form input later
 		if (!empty($movie['genres'])) {

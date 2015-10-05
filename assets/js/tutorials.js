@@ -25,8 +25,13 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element:  '#movie_details',
-	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> The rating and rating description will likely never be filled in because the American film ratings don\'t line up with Canada\'s. Always check to make sure the ratings used are the proper Canadian ratings.',
+	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> The American film ratings are converted to the closest Canadian equivalents and are sometimes wrong. Always check to make sure the rating is accurate by clicking <strong>Confirm Film Rating</strong>.',
 						position: 'right'
+	        },
+	        {
+	          element:  '#advisorydiv',
+	          intro: 	  'Select any applicable film advisories here.',
+						position: 'left'
 	        },
 	        {
 	          element:  '#movie_links',

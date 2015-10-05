@@ -1,3 +1,6 @@
+#api_spinner {
+  margin: 1px 4px 0 0;
+}
 .status-light {
 	background-image: none;
 	background-color: #FFC107;
@@ -12,6 +15,13 @@
 	margin-bottom:-5px;
 	margin-right:3px;
 }
+#rating-response {
+  display: none;
+}
+#rating-spinner {
+  margin: 1px 4px 0 12px !important;
+  float: none;
+}
 #poststuff .inside > h3 {
 	font-size: 14px;
 	padding: 8px 0;
@@ -21,13 +31,30 @@
 	max-width: 100%;
 	vertical-resize: yes;
 }
-#poststuff .inside .schedule-label {
+#poststuff .inside label span {
+	width: 60px;
+	display: inline-block;
+  text-align: center;
+	margin-right: 8px;
+  margin-left: 8px;
+}
+#poststuff .inside label .first-label {
 	width: 100px;
 	display: inline-block;
+  text-align: left;
 	margin-right: 8px;
+  margin-left: 0;
 }
 #poststuff .inside .postbox-container {
-	margin-top:20px;
+	margin-top: 20px;
+}
+#poststuff .inside .notice {
+  margin-top: 20px;
+  display: none;
+}
+#rating-confirm {
+	vertical-align: middle;
+	margin-left: 10px;
 }
 #trailer-frame {
 	width: 100%;
@@ -37,13 +64,12 @@
 	margin-top: 10px;
 }
 input[name=start_date],
-input[name=end_date] {
-	width: 160px;
-}
+input[name=end_date],
 input[name=early],
 input[name=late],
-input[name=special],
-input[name=matinee] {
+input[name=matinee],
+input[name=special_description],
+input[name=special_showtime] {
 	width: 120px;
 }
 input[name=trailer],

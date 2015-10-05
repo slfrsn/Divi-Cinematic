@@ -47,6 +47,19 @@ function save_if_changed($value, $post_id, $is_string) {
 	}
 }
 
+// Function to convert arrays to strings with a delimiter
+function convert_to_string($array, $delimiter) {
+	$copy = $array;
+	$string = '';
+	foreach ($array as $value) {
+			$string .= $value->name;
+	    if (next($copy )) {
+	        $string .= $delimiter; // Add delimiter for all elements instead of last
+	    }
+	}
+	return $string;
+}
+
 // Our theme needs it's own textdomain for translation
 add_action('after_setup_theme', 'divi_cinematic_setup');
 function divi_cinematic_setup(){
