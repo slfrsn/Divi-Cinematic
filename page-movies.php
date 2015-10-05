@@ -151,7 +151,8 @@ $movies_query = new WP_Query($movies_args); ?>
 							$meta['genres'] = wp_get_post_terms(get_the_ID(), 'genre');
 							$meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
 							$meta['features'] = wp_get_post_terms(get_the_ID(), 'feature');
-						?>
+							$meta['info-bar'] = array_merge($meta['genres'],$meta['features']);
+					?>
 						<div class="white_popup_top" data-start="<?=$meta['start_date'][0]?>" data-end="<?=$meta['end_date'][0]?>">
 							<div class="movie_poster">
 								<?=get_the_post_thumbnail($post->ID, array(250, 370), array('class' => ''))?>
@@ -172,9 +173,12 @@ $movies_query = new WP_Query($movies_args); ?>
 										<a href="http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/categoriesandadvisories" target="_blank" rel="external nofollow">
 											<img src="<?=get_stylesheet_directory_uri().'/assets/images/ratings/'.$meta['rating'][0].'.png'?>" title="Rated <?=strtoupper($meta['rating'][0])?>: <?=$rating_descriptions[$meta['rating'][0]]?>" class="rating-image">
 										</a>
-										<?php } ?>
-									<?=convert_to_string($meta['genres'], ' | ')?>
-									<?=convert_to_string($meta['features'], ' | ')?>
+										<?php }
+
+										$taxonomies = array_merge($meta['genres'],$meta['features']);
+
+										?>
+									<?=convert_to_string($meta['info-bar'], ' | ')?>
 									<?php if(isset($meta['website'][0]) && $meta['website_confirm'][0] != '') { echo '| <a href="'.$meta['website'][0].'" target="_blank" title="Official Website" rel="nofollow external">Official Website</a>'; } ?>
 								</p>
 
