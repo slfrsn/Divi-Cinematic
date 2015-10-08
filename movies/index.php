@@ -130,6 +130,22 @@ if (!function_exists('movies_post_type')) {
 		);
 	}
 
+	// Add Popup Column to Movie Listings
+	add_filter('manage_movies_posts_columns', 'is_popup_column_header', 10);
+	function is_popup_column_header($defaults) {
+		$defaults['is_popup'] = 'Show as Popup?';
+		return $defaults;
+	}
+
+	// Handle the Popup Column Data
+	add_action('manage_movies_posts_custom_column', 'is_popup_column_content', 10, 2);
+	function is_popup_column_content($column_name, $post_ID) {
+		if ($column_name == 'is_popup') {
+			$popup = ucwords(get_post_meta($post_ID, 'is_popup', true));
+			echo $popup;
+		}
+	}
+	
 	// Add Start Date Column to Movie Listings
 	add_filter('manage_movies_posts_columns', 'start_date_column_header', 10);
 	function start_date_column_header($defaults) {
@@ -200,8 +216,8 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Handle the Date Column Sorting
-	add_filter( 'request', 'price_column_orderby' );
-	function price_column_orderby( $vars ) {
+	add_filter( 'request', 'date_column_orderby' );
+	function date_column_orderby( $vars ) {
 		// Sort by Start Date
 	  if (isset($vars['orderby']) && 'start_date' == $vars['orderby']) {
 	    $vars = array_merge($vars, array(

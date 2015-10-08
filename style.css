@@ -5,7 +5,7 @@ Author:           scfrsn
 Author URI:       https://github.com/scfrsn
 Theme URI:        https://github.com/scfrsn/Divi-Cinematic
 Template:         divi
-Version:          1.4.2
+Version:          1.4.3
 
 CSS Structure
 ----------------
@@ -80,6 +80,10 @@ CSS Structure
   .movie_notes {
     background-color: #333;
   }
+  .movie-popup .movie_details h2:before { /* Button to show the special showings */
+    content: 'Special Showing: ';
+    font-weight: bold;
+  }
   /* The actual visible popup container */
   .white_popup {
     position: relative;
@@ -100,6 +104,7 @@ CSS Structure
   }
   .white_popup_bottom {
     clear: both;
+    line-height: 0;
   }
 
   /*=======================*/
@@ -287,6 +292,9 @@ CSS Structure
     .page-template-page-movies-php #content-area {
       padding: 30px 60px;
     }
+    #movie-show-popups { /* Button to show the special showings */
+      margin-top: -30px;
+    }
     /* Poster stack */
     .poster {
       float: left;
@@ -327,6 +335,9 @@ CSS Structure
     }
     #main-content {
       min-height: 0; /* Let the poster rows fill the content area */
+    }
+    #movie-show-popups { /* Button to show the special showings */
+      padding: 40px 0;
     }
     .poster {
       float: left;

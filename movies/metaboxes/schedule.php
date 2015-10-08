@@ -48,6 +48,13 @@ function movie_schedule_content($post) {
 		</label>
 	</p>
 
+	<p>
+		<label>
+			<input type="checkbox" name="is_popup" value="yes" <?=echo_checkbox($meta['is_popup'][0],'yes')?>>
+			Show this movie as a popup and exclude it from the Now Playing and Coming Soon pages</em>
+		</label>
+	</p>
+
 	<h3>Showtimes</h3>
 	<p>Please enter the nightly and matinee show times in HH:MM PM format (e.g. 7:15 PM). For exceptions, please add them to the "Other times or notes..." field.</p>
 	<p>
@@ -110,6 +117,7 @@ function movie_schedule_meta_save($post_id) {
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
 	if(!isset($_POST['end_date']) || $_POST['end_date'] == "") { update_post_meta($post_id, 'end_date', 246767472000); }
+	update_post_meta($post_id, 'is_popup', (isset($_POST['is_popup']) ? $_POST['is_popup'] : ''));
 	save_if_changed('notes', $post_id, true);
 }
 

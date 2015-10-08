@@ -86,8 +86,8 @@ function movie_links_meta_save($post_id) {
 	// Check for input and sanitizes/saves if needed
 	save_if_changed('trailer', $post_id, true);
 	save_if_changed('website', $post_id, true);
-	update_post_meta($post_id, 'trailer_confirm', (!empty($_POST['trailer_confirm']) ? 'yes' : ''));
-	update_post_meta($post_id, 'website_confirm', (!empty($_POST['website_confirm']) ? 'yes' : ''));
+	update_post_meta($post_id, 'trailer_confirm', (isset($_POST['trailer_confirm']) ? $_POST['trailer_confirm'] : ''));
+	update_post_meta($post_id, 'website_confirm', (isset($_POST['website_confirm']) ? $_POST['website_confirm'] : ''));
 }
 
 ?>
