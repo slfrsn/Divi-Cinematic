@@ -130,22 +130,6 @@ if (!function_exists('movies_post_type')) {
 		);
 	}
 
-	// Add Popup Column to Movie Listings
-	add_filter('manage_movies_posts_columns', 'is_popup_column_header', 10);
-	function is_popup_column_header($defaults) {
-		$defaults['is_popup'] = 'Show as Popup?';
-		return $defaults;
-	}
-
-	// Handle the Popup Column Data
-	add_action('manage_movies_posts_custom_column', 'is_popup_column_content', 10, 2);
-	function is_popup_column_content($column_name, $post_ID) {
-		if ($column_name == 'is_popup') {
-			$popup = ucwords(get_post_meta($post_ID, 'is_popup', true));
-			echo $popup;
-		}
-	}
-	
 	// Add Start Date Column to Movie Listings
 	add_filter('manage_movies_posts_columns', 'start_date_column_header', 10);
 	function start_date_column_header($defaults) {
@@ -193,6 +177,7 @@ if (!function_exists('movies_post_type')) {
 		if ($column_name == 'status') {
 			$start_date = get_post_meta($post_ID, 'start_date', true);
 			$end_date = get_post_meta($post_ID, 'end_date', true);
+			$is_popup = get_post_meta($post_ID, 'is_popup', true);
 			$current_date = strtotime('today');
 
 			// Status Conditions
@@ -202,6 +187,7 @@ if (!function_exists('movies_post_type')) {
 			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#dd3d36;">Expired</span>';	}
 			if (get_post_status ($post_ID ) != 'publish' ) { $column_data = '<span style="color:#aaa;">Not published</span>';	}
 			if (get_post_status ($post_ID ) == 'future' ) { $column_data = 'Scheduled';	}
+			if (!empty($is_popup) && ($is_popup == 'yes')) { $column_data = 'Showing as Popup';	}
 
 			echo $column_data;
 		}
