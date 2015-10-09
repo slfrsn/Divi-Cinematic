@@ -294,6 +294,7 @@ CSS Structure
     }
     #movie-show-popups { /* Button to show the special showings */
       margin-top: -30px;
+      margin-bottom: 40px;
     }
     /* Poster stack */
     .poster {
