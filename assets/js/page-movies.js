@@ -7,7 +7,6 @@ jQuery(document).ready(function($){
 			midClick: true,
 			gallery: {
 				enabled: true,
-				navigateByImgClick: true
 			}
 		});
 	}
@@ -18,10 +17,8 @@ jQuery(document).ready(function($){
 		$popups.magnificPopup({
 			type:'inline',
 			midClick: true,
-			mainClass: 'movie-popup',
 			gallery: {
 				enabled: true,
-				navigateByImgClick: true
 			}
 		});
 		// Open the popups on page load (only on the home page)
@@ -33,4 +30,26 @@ jQuery(document).ready(function($){
 			$popups.magnificPopup('open');
 		});
 	}
+
+	// Load the widget popups gallery if it exists
+	$widget_popups = $('#movie-widgets .details_popup');
+	if ($widget_popups.length) {
+		$widget_popups.magnificPopup({
+			type:'inline',
+			midClick: true,
+			gallery: {
+				enabled: true,
+			}
+		});
+		// Open the widget_popups on button press
+		// $('#movie-show-widgets').click(function() {
+		// 	$widget_popups.magnificPopup.open({
+		// 	  items: {
+		// 	    src: '#post-2320-details'
+		// 	  },
+		// 	  type: 'inline'
+		// 	}, 0);
+		// });
+	}
+
 });

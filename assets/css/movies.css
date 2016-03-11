@@ -38,12 +38,12 @@
 	margin-right: 8px;
   margin-left: 8px;
 }
-#poststuff .inside label .first-label {
-	width: 100px;
-	display: inline-block;
-  text-align: left;
+#poststuff #movie_schedule .inside input[type=text] {
 	margin-right: 8px;
-  margin-left: 0;
+  margin-left: 8px;
+}
+#poststuff .inside .radio-group label {
+	margin-right: 8px;
 }
 #poststuff .inside .postbox-container {
 	margin-top: 20px;

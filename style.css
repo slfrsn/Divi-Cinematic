@@ -13,12 +13,14 @@ CSS Structure
    - Page Structure
    - Movie Listing Popup
    - No-listings Message
+   - Miscellaneous
 2. Parent Theme Tweaks
    - Header
    - Footer
 3. Plugin Tweaks
    - Newsletter
-3. Media Queries
+4. Miscellaneous
+5. Media Queries
    - More than 980px
    - Less than 980px
    - More than 767px
@@ -80,7 +82,7 @@ CSS Structure
   .movie_notes {
     background-color: #333;
   }
-  .movie-popup .movie_details h2:before { /* Button to show the special showings */
+  .movie-popup .movie_details h2:before {
     content: 'Special Showing: ';
     font-weight: bold;
   }
@@ -123,6 +125,61 @@ CSS Structure
   .no-movies p {
     font-size: 20px;
     color: #fff;
+  }
+
+  /*=======================*/
+  /* - MISCELLANEOUS */
+  /*=======================*/
+
+  /* Button to show the special showings */
+  #movie-show-popups {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  #movie-show-popups button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #fff;
+    font-weight: bold;
+  }
+  #movie-show-popups span {
+    background: #fff;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    line-height: 1;
+    margin-left: 5px;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 50%;
+  }
+  #movie-widgets li {
+    padding-left: 0 !important;
+  }
+  #movie-widgets li::before {
+    display: none;
+  }
+  #movie-widgets li a div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 1em;
+    text-align: center;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.8);
+    background: linear-gradient(black, rgba(0, 0, 0, 0));
+    padding: 15px 10px 40px 10px;
+  }
+  #movie-widgets li h4 {
+    font-size: 20px;
   }
 
 /*========================*/
@@ -265,7 +322,15 @@ CSS Structure
   }
 
 /*==================*/
-/* 4. MEDIA QUERIES */
+/* 4. MISCELLANEOUS */
+/*==================*/
+
+  .fb_iframe_widget, .fb_iframe_widget span, .fb_iframe_widget span iframe[style] {
+    width: 100% !important;
+  }
+
+/*==================*/
+/* 5. MEDIA QUERIES */
 /*==================*/
 
   /*===================*/
@@ -292,10 +357,6 @@ CSS Structure
     .page-template-page-movies-php #content-area {
       padding: 30px 60px;
     }
-    #movie-show-popups { /* Button to show the special showings */
-      margin-top: -30px;
-      margin-bottom: 40px;
-    }
     /* Poster stack */
     .poster {
       float: left;
@@ -314,7 +375,18 @@ CSS Structure
   @media only screen and (max-width: 980px) {
     #main-header #et_mobile_nav_menu {
       margin-top: 0;
-      padding: 5px;
+      padding: 10px;
+      cursor: pointer;
+    }
+    #main-header .mobile_nav {
+      background-color: transparent !important;
+    }
+    .mobile_menu_bar {
+      top: 10px !important;
+      right: 10px !important;
+    }
+    .mobile_menu_bar:before, .mobile_menu_bar:after {
+      color: #fff !important;
     }
     .et_mobile_menu {
       top: 43px; /* There's a gap at the top of the menu otherwise */
@@ -336,13 +408,14 @@ CSS Structure
     }
     #main-content {
       min-height: 0; /* Let the poster rows fill the content area */
+      background: #000 !important;
     }
-    #movie-show-popups { /* Button to show the special showings */
-      padding: 40px 0;
+    #poster-row {
+      width: 100% !important;
     }
     .poster {
       float: left;
-      min-width: 25%; /* We don't want more than 4 posters per row in mobile view */
+      min-width: 50%; /* We don't want more than 4 posters per row in mobile view */
       /* Remove the transforms to straighten them out */
       transform: none !important;
       -webkit-transform: none !important;

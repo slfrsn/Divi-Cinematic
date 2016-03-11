@@ -9,6 +9,17 @@ function movie_schedule_content($post) {
 	$post_id = $post->ID;
 	$meta = get_post_meta($post_id);
 
+	// Custom editor settings
+	$editor_options = array(
+		'media_buttons' => false,
+		'wpautop' => false,
+		'textarea_rows' => 6,
+		'quicktags' => false,
+		'tinymce' => array(
+      'toolbar1' => 'bold,italic,strikethrough,link,unlink'
+		)
+	);
+
 	// Get the theme options for default listing times
 	$defaults_early = get_theme_mod('divi-cinematic-early', '7:00 PM');
 	$defaults_late = get_theme_mod('divi-cinematic-late', '9:00 PM');
@@ -40,48 +51,25 @@ function movie_schedule_content($post) {
 	<h3>Active Period</h3>
 	<p>Please enter the first and last date this movie will show on. You can use any date format you want, just remember to include the day, month and year.</p>
 	<p>
-		<label><span class="first-label">Start Date:</span>
-			<input type="text" name="start_date" value="<?=$meta['start_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday'))?>"/>
-		</label>
-		<label><span>End Date:</span>
-			<input type="text" name="end_date" value="<?=$meta['end_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday +6 days'))?>"/>
-		</label>
+		<label>Start Date: <input type="text" name="start_date" value="<?=$meta['start_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday'))?>"/></label>
+		<label>End Date: <input type="text" name="end_date" value="<?=$meta['end_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday +6 days'))?>"/></label>
 	</p>
 
-	<p>
-		<label>
-			<input type="checkbox" name="is_popup" value="yes" <?=echo_checkbox($meta['is_popup'][0],'yes')?>>
-			Show this movie as a popup and exclude it from the Now Playing and Coming Soon pages</em>
-		</label>
+	<h3>Special Listing</h3>
+	<p>Selecting one of the following options will remove the listing from the Now Playing and Coming Soon pages.</p>
+	<p class="radio-group">
+		<label><input type="radio" name="listing_type" value="none" <?php checked(echo_var($meta['listing_type'][0], 'none'), 'none' ); ?>>None</label>
+		<label><input type="radio" name="listing_type" value="popup" <?php checked(echo_var($meta['listing_type'][0]), 'popup' ); ?>>Show as Popup</label>
+		<label><input type="radio" name="listing_type" value="widget" <?php checked(echo_var($meta['listing_type'][0]), 'widget' ); ?>>Show in Widget</label>
 	</p>
 
 	<h3>Showtimes</h3>
-	<p>Please enter the nightly and matinee show times in HH:MM PM format (e.g. 7:15 PM). For exceptions, please add them to the "Other times or notes..." field.</p>
-	<p>
-		<label><span class="first-label">Early:</span>
-			<input type="text" name="early" value="<?=$meta['early'][0]?>" placeholder="e.g. <?=$defaults_early?>"/>
-		</label>
-		<label><span>Late:</span>
-			<input type="text" name="late" value="<?=$meta['late'][0]?>" placeholder="e.g. <?=$defaults_late?>"/>
-		</label>
-	</p>
+	<p>Enter your showtimes here. Basic formatting is allowed (bold, italic, links, etc.)</p>
+	<p><?php wp_editor(htmlspecialchars_decode(echo_var($meta['showtimes'][0])), 'showtimes', $editor_options); ?></p>
 
-	<p><label><span class="first-label">Matinees:</span>
-		<input type="text" name="matinee" value="<?=$meta['matinee'][0]?>" placeholder="e.g. <?=$defaults_matinee?>"/>
-	</label></p>
-
-	<p>
-		<label><span class="first-label">Special:</span>
-			<input type="text" name="special_description" value="<?=echo_var($meta['special_description'][0])?>" placeholder="Canada Day"/>
-		</label>
-		<label><span>&#64;</span>
-			<input type="text" name="special_showtime" value="<?=echo_var($meta['special_showtime'][0])?>" placeholder="e.g. 2:00 PM"/>
-		</label>
-	</p>
-
-	<p><label>Other times or notes...<br>
-		<textarea name="notes" rows="5"><?=echo_var($meta['notes'][0])?></textarea>
-	</label></p>
+	<h3>Notes</h3>
+	<p>Notes are added to the bottom of the showtimes box in larger font and a contrasting background colour to grab attention.</p>
+	<p><?php wp_editor(htmlspecialchars_decode(echo_var($meta['notes'][0])), 'notes', $editor_options); ?></p>
 
 	<input type="hidden" id="post_id" value="<?=$post->ID?>">
 	<input type="hidden" name="fetched" value="0">
@@ -109,6 +97,15 @@ function movie_schedule_meta_save($post_id) {
 		update_post_meta($post_id, 'has_saved', 1);
 	}
 	// Check for input and sanitizes/saves if needed
+	$allowed_tags = '<b><strong><em><del><a><br><p>';
+	if (!empty($_POST['showtimes'])) {
+    $data=strip_tags(htmlspecialchars_decode($_POST['showtimes']), $allowed_tags);
+    update_post_meta($post_id, 'showtimes', $data );
+  }
+	if (!empty($_POST['notes'])) {
+    $data=strip_tags(htmlspecialchars_decode($_POST['notes']), $allowed_tags);
+    update_post_meta($post_id, 'notes', $data );
+  }
 	if(isset($_POST['early'])) { update_post_meta($post_id, 'early', $_POST['early']); }
 	if(isset($_POST['late'])) { update_post_meta($post_id, 'late', $_POST['late']); }
 	if(isset($_POST['matinee'])) { update_post_meta($post_id, 'matinee', $_POST['matinee']); }
@@ -117,8 +114,7 @@ function movie_schedule_meta_save($post_id) {
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
 	if(!isset($_POST['end_date']) || $_POST['end_date'] == "") { update_post_meta($post_id, 'end_date', 246767472000); }
-	update_post_meta($post_id, 'is_popup', (isset($_POST['is_popup']) ? $_POST['is_popup'] : ''));
-	save_if_changed('notes', $post_id, true);
+	update_post_meta($post_id, 'listing_type', (isset($_POST['listing_type']) ? $_POST['listing_type'] : 'none'));
 }
 
 ?>

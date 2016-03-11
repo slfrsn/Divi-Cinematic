@@ -20,7 +20,7 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element:  '#movie_schedule',
-	          intro: 	  'Enter the movie schedule details.<br><br><strong>Note:</strong> If you need to add a second showtime to the matinees, enter it like this:<br><strong>2:00 PM, 4:00PM</strong><br><br>If you need to specify that a showing is in 3D, enter it like this:<br><strong>6:30 PM (3D)</strong>',
+	          intro: 	  'Enter the movie schedule details.',
 						position: 'right'
 	        },
 	        {
@@ -110,7 +110,7 @@ jQuery(document).ready(function($){
 
 		$('#tutorial').click(function(e) {
 			// Make the first set of row actions visible so we can target them
-			$('.row-actions').first().css('visibility','visible');
+			$('.row-actions').first().css('left','0');
 
 	  	var intro = introJs();
 	    intro.setOptions({
@@ -132,10 +132,10 @@ jQuery(document).ready(function($){
 	    });
 	    intro.start().oncomplete(function() {
 				// Hide the row actions so they behave normally after the tutorial is complete
-				$('.row-actions').first().css('visibility','');
+				$('.row-actions').first().css('left','-9999em');
 			}).onexit(function() {
 				// Hide the row actions so they behave normally after the tutorial has exited
-				$('.row-actions').first().css('visibility','');
+				$('.row-actions').first().css('left','-9999em');
 			});
 
 		});
@@ -144,7 +144,7 @@ jQuery(document).ready(function($){
 	// Introduction tutorial for the Newsletters index page
 	if($('body').hasClass('newsletter_page_newsletter_emails_index')) {
 		var target = 'input[value="Trigger the delivery engine"]';
-		var button = '<input class="button-primary" type="button" value="Tutorial" id="tutorial" style="margin-left:4px"> ';
+		var button = '<input class="button-secondary" type="button" value="Tutorial" id="tutorial" style="margin-left:4px"> ';
 		// Insert our tutorial button at the top of the page
 		$(button).insertAfter(target);
 
@@ -155,7 +155,7 @@ jQuery(document).ready(function($){
 				showBullets: true,
 	      steps: [
 	        {
-	          element:	'input[value="Copy"]:first-of-type',
+	          element:	'.widefat tbody tr:first-of-type td:nth-child(10) button',
 	          intro: 	 	'Click <strong>Copy</strong> on the most recent newsletter to duplicate it.',
 						position: 'left'
 	        },
@@ -173,7 +173,7 @@ jQuery(document).ready(function($){
 	// Introduction tutorial for the Newsletter edit page
 	if($('body').hasClass('admin_page_newsletter_emails_edit')) {
 		var target = '.submit input[type="button"]:last-of-type';
-		var button = '<input class="button-primary" type="button" value="Tutorial" id="tutorial" style="margin-left:4px"> ';
+		var button = '<input class="button-secondary" type="button" value="Tutorial" id="tutorial" style="margin-left:4px"> ';
 		// Insert our tutorial button at the top of the page
 		$(button).insertAfter(target);
 

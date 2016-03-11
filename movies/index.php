@@ -177,7 +177,7 @@ if (!function_exists('movies_post_type')) {
 		if ($column_name == 'status') {
 			$start_date = get_post_meta($post_ID, 'start_date', true);
 			$end_date = get_post_meta($post_ID, 'end_date', true);
-			$is_popup = get_post_meta($post_ID, 'is_popup', true);
+			$listing_type = get_post_meta($post_ID, 'listing_type', true);
 			$current_date = strtotime('today');
 
 			// Status Conditions
@@ -187,7 +187,8 @@ if (!function_exists('movies_post_type')) {
 			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#dd3d36;">Expired</span>';	}
 			if (get_post_status ($post_ID ) != 'publish' ) { $column_data = '<span style="color:#aaa;">Not published</span>';	}
 			if (get_post_status ($post_ID ) == 'future' ) { $column_data = 'Scheduled';	}
-			if (!empty($is_popup) && ($is_popup == 'yes')) { $column_data = 'Showing as Popup';	}
+			if (!empty($listing_type) && ($listing_type == 'popup')) { $column_data = 'Showing as Popup';	}
+			if (!empty($listing_type) && ($listing_type == 'widget')) { $column_data = 'Showing in Widget';	}
 
 			echo $column_data;
 		}
@@ -246,6 +247,9 @@ if (!function_exists('movies_post_type')) {
     return $content;
 	}
 
+	// Include the special listing widget
+	require_once('widget.php');
+
 	// =============================
 	// META BOXES
 	// =============================
@@ -278,7 +282,7 @@ if (!function_exists('movies_post_type')) {
 		);
 		add_meta_box(
 			'movie_response',
-			'Response Data',
+			'API Response Data',
 			'movie_response_content',
 			'movies',
 			'normal',
@@ -334,7 +338,6 @@ if (!function_exists('movies_post_type')) {
 		// Our list of American to Canadian (BC) conversions
 		// NOTE: This isn't an exact science. The conversions are based off of
 		// personal experience from updating theatre listings on a weekly basis.
-		//
 		$conversions = [
 			'G' 		=> [ 'G',   'Suitable for viewing by persons of all ages' ],
 			'PG' 		=> [ 'PG',  'Parental guidance advised' ],
@@ -387,11 +390,11 @@ if (!function_exists('movies_post_type')) {
 		// Set the variables
 		// Using addcslashes() to double escape quotes sometimes returned in the synopsis
 		if (!empty($movie_obj))				  { update_post_meta($_POST['id'], 'json_response', addcslashes($api_request, '"')); }
-		if (!empty($movie['duration'])) { update_post_meta($_POST['id'], 'runtime_minutes',  $movie['duration']); }
-		if (!empty($movie['synopsis'])) { update_post_meta($_POST['id'], 'description', 		 $movie['synopsis']); }
-		if (!empty($movie['cast']))		  { update_post_meta($_POST['id'], 'starring', 			   $movie['cast']); }
-		if (!empty($movie['trailer']))  { update_post_meta($_POST['id'], 'trailer', 				 $movie['trailer']); }
-		if (!empty($movie['website']))  { update_post_meta($_POST['id'], 'website', 				 $movie['website']); }
+		if (!empty($movie['duration'])) { update_post_meta($_POST['id'], 'runtime_minutes', $movie['duration']); }
+		if (!empty($movie['synopsis'])) { update_post_meta($_POST['id'], 'description', 		$movie['synopsis']); }
+		if (!empty($movie['cast']))		  { update_post_meta($_POST['id'], 'starring', 			  $movie['cast']); }
+		if (!empty($movie['trailer']))  { update_post_meta($_POST['id'], 'trailer', 				$movie['trailer']); }
+		if (!empty($movie['website']))  { update_post_meta($_POST['id'], 'website', 				$movie['website']); }
 		if (!empty($movie['rating']))   {
 			update_post_meta($_POST['id'], 'rating', convert_film_rating($movie['rating'], false));
 			update_post_meta($_POST['id'], 'rating_description', convert_film_rating($movie['rating'], true));
@@ -467,10 +470,10 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Enqueue the script for loading movie details in a popup
-	add_action( 'wp_enqueue_scripts', 'page_movies_script' );
+	add_action('wp_enqueue_scripts', 'page_movies_script');
 	function page_movies_script() {
-    if (is_page_template( 'page-movies.php' ) ) {
-			wp_enqueue_script( 'page_movies', get_stylesheet_directory_uri() . '/assets/js/page-movies.js' );
+    if (is_page_template('page-movies.php') ||  is_active_widget('', '', 'divicinematicmovie_widget')) {
+			wp_enqueue_script('page_movies', get_stylesheet_directory_uri() . '/assets/js/page-movies.js');
 		}
 	}
 }

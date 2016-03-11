@@ -66,33 +66,6 @@ function divi_cinematic_setup(){
 	load_child_theme_textdomain( 'divi-cinematic', get_stylesheet_directory_uri() . '/languages' );
 }
 
-// Create a settings section in the customizer to give us control over our default showtimes
-add_action( 'customize_register', 'divi_cinematic_customize_register' );
-function divi_cinematic_customize_register( $wp_customize ) {
-	$wp_customize->add_section( 'divi-cinematic-defaults' , array(
-    'title'      => __( 'Movie Listing Defaults', 'divi-cinematic' ),
-    'priority'   => 30,
-	));
-	$wp_customize->add_setting( 'divi-cinematic-early' , array('default' => '6:30 PM'));
-	$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'divi-cinematic-early', array(
-		'label'      => __( 'Early Time', 'divi-cinematic' ),
-		'section'    => 'divi-cinematic-defaults',
-		'settings'   => 'divi-cinematic-early',
-	)));
-	$wp_customize->add_setting( 'divi-cinematic-late' , array('default' => '9:00 PM'));
-	$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'divi-cinematic-late', array(
-		'label'      => __( 'Late Time', 'divi-cinematic' ),
-		'section'    => 'divi-cinematic-defaults',
-		'settings'   => 'divi-cinematic-late',
-	)));
-	$wp_customize->add_setting( 'divi-cinematic-matinee' , array('default' => '2:00 PM'));
-	$wp_customize->add_control( new WP_Customize_Control( $wp_customize, 'divi-cinematic-matinee', array(
-		'label'      => __( 'Matinee Time', 'divi-cinematic' ),
-		'section'    => 'divi-cinematic-defaults',
-		'settings'   => 'divi-cinematic-matinee',
-	)));
-}
-
 // Automatic theme updates from the GitHub repository
 add_filter('pre_set_site_transient_update_themes', 'automatic_GitHub_updates', 100, 1);
 function automatic_GitHub_updates($data) {

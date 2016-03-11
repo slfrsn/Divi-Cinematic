@@ -12,8 +12,8 @@ $popups_args = array (
 	'post_type'		  => 'movies',
 	'meta_query'    => array(
     array(
-      'key' 		=> 'is_popup',
-      'value'   => 'yes'
+      'key' 		=> 'listing_type',
+      'value'   => 'popup'
     )
 	)
 );
@@ -21,8 +21,8 @@ $popups_args = array (
 $popups_query = new WP_Query($popups_args); ?>
 
 	<?php if ($popups_query->have_posts()) : ?>
-		<div class="et_pb_bg_layout_dark et_pb_text_align_center" id="movie-show-popups">
-			<button class="et_pb_promo_button et_pb_button">Show Specials</button>
+		<div id="movie-show-popups">
+			<button>Special Showtimes <span style="color: <?=et_get_option('secondary_nav_bg')?>"><?=$popups_query->post_count?></span></button>
 		</div>
 
 		<ul id="movie-popups">

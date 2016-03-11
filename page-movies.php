@@ -30,8 +30,8 @@ if ($meta['status'][0] == 'nowplaying') {
 				'compare' => '>=', // if end date is greater than or equal to midnight today.
 			),
       array(
-		    'key' 		=> 'is_popup',
-				'value'		=> array('yes'),
+		    'key' 		=> 'listing_type',
+				'value'		=> array('popup','widget'),
 				'compare' => 'NOT IN'
 	    )
 		)
@@ -55,8 +55,8 @@ if ($meta['status'][0] == 'nowplaying') {
 				'compare' => '>', // value -> operator -> key
 			),
       array(
-		    'key' 		=> 'is_popup',
-				'value'		=> array('yes'),
+		    'key' 		=> 'listing_type',
+				'value'		=> array('popup','widget'),
 				'compare' => 'NOT IN'
 	    )
 		)
@@ -80,9 +80,9 @@ $popups_args = array (
 			'compare' => '>=', // if end date is greater than or equal to midnight today.
 		),
     array(
-      'key' 		=> 'is_popup',
-      'value'   => 'yes',
-			'type'		=> 'BOOLEAN'
+	    'key' 		=> 'listing_type',
+			'value'		=> 'popup',
+			'compare' => 'LIKE'
     )
 	)
 );
@@ -92,7 +92,6 @@ $movies_query = new WP_Query($movies_args); ?>
 <div id="main-content" style="background-color: <?=et_get_option('secondary_nav_bg')?>">
 	<div class="container">
 		<div id="content-area" class="clearfix">
-			<?php include(locate_template('partials/popups.php')); ?>
 
 			<?php
 				$counter = 0;
@@ -185,7 +184,6 @@ $movies_query = new WP_Query($movies_args); ?>
 							unset($meta);
 						?>
 					</li>
-
 				<?php
 					endwhile;
 				else:
@@ -198,6 +196,7 @@ $movies_query = new WP_Query($movies_args); ?>
 			</ul><!-- .poster-row -->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
+	<?php include(locate_template('partials/popups.php')); ?>
 </div> <!-- #page-container -->
 
 <?php get_footer(); ?>

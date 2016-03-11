@@ -43,10 +43,10 @@
 				?>
 				<div>
 					<?php
-						if(!empty($meta['early'][0]) || !empty($meta['late'][0])) { echo '<strong>Nightly: </strong>'.$meta['early'][0].$comma.$meta['late'][0].'<br>'; }
-						if(!empty($meta['matinee'][0])) { echo '<strong>Weekend Matinees: </strong>'.$meta['matinee'][0].'<br>'; }
-						if(!empty($meta['special_description'][0]) && !empty($meta['special_showtime'][0])) {
-							echo '<strong>'.$meta['special_description'][0].': </strong>'.$meta['special_showtime'][0].'<br>';
+						if(!empty($meta['showtimes'][0])) {
+						  $showtimes = $meta['showtimes'][0];
+					    $showtimes = htmlspecialchars_decode($showtimes);
+					    echo $showtimes;
 						}
 					?>
 					<span class="movie_small_details">
@@ -56,7 +56,13 @@
 					?>
 					</span>
 				</div>
-				<?php if(!empty($meta['notes'][0])) { echo '<div class="movie_notes">'.$meta['notes'][0].'</div>'; } ?>
+					<?php
+						if(!empty($meta['notes'][0])) {
+						  $notes = $meta['notes'][0];
+					    $notes = htmlspecialchars_decode($notes);
+					    echo '<div class="movie_notes">'.$notes.'</div>';
+						}
+					?>
 			</div>
 			<br>
 			<?php if(!empty($meta['starring'][0])) { echo '<p><strong>Starring: </strong>'.$meta['starring'][0].'</p>'; } ?>
