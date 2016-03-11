@@ -49,7 +49,7 @@
 							Click for Details
 						</div>
 					<?php endif; ?>
-						<?=get_the_post_thumbnail($post->ID, 'medium', array('class' => ''))?>
+						<?=get_the_post_thumbnail($post->ID, 'large', array('class' => ''))?>
 					</a>
 					<?php
 						include(locate_template('partials/movie.php'));
