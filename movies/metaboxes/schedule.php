@@ -16,23 +16,13 @@ function movie_schedule_content($post) {
 		'textarea_rows' => 6,
 		'quicktags' => false,
 		'tinymce' => array(
-      'toolbar1' => 'bold,italic,strikethrough,link,unlink'
+      'toolbar1' => 'bold,italic,strikethrough,link,unlink',
+      'toolbar2' => '',
+      'toolbar3' => '',
+      'toolbar4' => ''
 		)
 	);
 
-	// Get the theme options for default listing times
-	$defaults_early = get_theme_mod('divi-cinematic-early', '7:00 PM');
-	$defaults_late = get_theme_mod('divi-cinematic-late', '9:00 PM');
-	$defaults_matinee = get_theme_mod('divi-cinematic-matinee', '2:00 PM');
-
-	// Check for the 'has_saved' flag
-	if (!isset($meta['has_saved']) || !$meta['has_saved'][0]) {
-		// Only use the default showtimes if the listing hasn't been saved yet
-		// (to prevent the default showtimes from overwriting empty showtimes)
-		$meta['early'][0] = $defaults_early;
-		$meta['late'][0] = $defaults_late;
-		$meta['matinee'][0] = $defaults_matinee;
-  }
 	// Determine start date
 	if (isset($meta['start_date']) && ($meta['start_date'][0] != '')) {
 		$meta['start_date'][0] = date('M. j, Y',$meta['start_date'][0]);
@@ -45,7 +35,6 @@ function movie_schedule_content($post) {
 	} else {
 		$meta['end_date'][0] = date('M. j, Y',strtotime('next Friday +6 days'));
 	}
-
 ?>
 
 	<h3>Active Period</h3>
@@ -58,6 +47,7 @@ function movie_schedule_content($post) {
 	<h3>Special Listing</h3>
 	<p>Selecting one of the following options will remove the listing from the Now Playing and Coming Soon pages.</p>
 	<p class="radio-group">
+		<label>Label: <input type="text" name="listing_label" value="<?=echo_var($meta['listing_label'][0])?>" placeholder="e.g. Special Showtime"/></label>
 		<label><input type="radio" name="listing_type" value="none" <?php checked(echo_var($meta['listing_type'][0], 'none'), 'none' ); ?>>None</label>
 		<label><input type="radio" name="listing_type" value="popup" <?php checked(echo_var($meta['listing_type'][0]), 'popup' ); ?>>Show as Popup</label>
 		<label><input type="radio" name="listing_type" value="widget" <?php checked(echo_var($meta['listing_type'][0]), 'widget' ); ?>>Show in Widget</label>
@@ -92,10 +82,6 @@ function movie_schedule_meta_save($post_id) {
 		update_post_meta($post_id, 'fetched', 0);
 		return;
 	}
-	// Set a custom value to indicate the post has been saved at least once
-	if (isset($_POST['post_title'])) {
-		update_post_meta($post_id, 'has_saved', 1);
-	}
 	// Check for input and sanitizes/saves if needed
 	$allowed_tags = '<b><strong><em><del><a><br><p>';
 	if (!empty($_POST['showtimes'])) {
@@ -106,15 +92,11 @@ function movie_schedule_meta_save($post_id) {
     $data=strip_tags(htmlspecialchars_decode($_POST['notes']), $allowed_tags);
     update_post_meta($post_id, 'notes', $data );
   }
-	if(isset($_POST['early'])) { update_post_meta($post_id, 'early', $_POST['early']); }
-	if(isset($_POST['late'])) { update_post_meta($post_id, 'late', $_POST['late']); }
-	if(isset($_POST['matinee'])) { update_post_meta($post_id, 'matinee', $_POST['matinee']); }
-	if(isset($_POST['special_description'])) { update_post_meta($post_id, 'special_description', $_POST['special_description']); }
-	if(isset($_POST['special_showtime'])) { update_post_meta($post_id, 'special_showtime', $_POST['special_showtime']); }
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
 	if(!isset($_POST['end_date']) || $_POST['end_date'] == "") { update_post_meta($post_id, 'end_date', 246767472000); }
-	update_post_meta($post_id, 'listing_type', (isset($_POST['listing_type']) ? $_POST['listing_type'] : 'none'));
+	if(isset($_POST['listing_type'])) { update_post_meta($post_id, 'listing_type', $_POST['listing_type']); }
+	if(isset($_POST['listing_label'])) { update_post_meta($post_id, 'listing_label', $_POST['listing_label']); }
 }
 
 ?>

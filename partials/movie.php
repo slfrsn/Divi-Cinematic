@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="movie_details">
-			<h2><?php the_title(); ?></h2>
+			<h2><?=(empty($meta['listing_label'][0]) ? '' : '<strong>'.$meta['listing_label'][0].'</strong>: ')?><?php the_title(); ?></h2>
 			<p class="post-meta">
 				<?php if(!empty($meta['rating'][0]) && $meta['rating'][0] != 'NA') {
 					$rating_descriptions = [
