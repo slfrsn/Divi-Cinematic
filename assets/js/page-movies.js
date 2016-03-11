@@ -41,15 +41,6 @@ jQuery(document).ready(function($){
 				enabled: true,
 			}
 		});
-		// Open the widget_popups on button press
-		// $('#movie-show-widgets').click(function() {
-		// 	$widget_popups.magnificPopup.open({
-		// 	  items: {
-		// 	    src: '#post-2320-details'
-		// 	  },
-		// 	  type: 'inline'
-		// 	}, 0);
-		// });
 	}
 
 });
