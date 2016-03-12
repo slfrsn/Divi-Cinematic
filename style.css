@@ -312,7 +312,8 @@ CSS Structure
     padding-left: 80px;
     padding-right: 80px;
   }
-  /* Footer widget images should fill the widget width */
+  /* Footer widget containers and images should fill the widget width */
+  .footer-widget > div,
   .footer-widget img,
   .footer-widget .widget_sp_image {
     max-width: 100%;
