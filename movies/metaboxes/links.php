@@ -12,11 +12,12 @@ function movie_links_content($post) {
 	$website = get_post_meta($post_id, 'website', true);
 ?>
 
+	<a href="https://www.youtube.com/results?search_query=<?=urlencode($post->post_title)?>+trailer" target="_blank" class="button right">Search for Trailer</a>
 	<h3>Trailer</h3>
-	<p>Please enter the YouTube URL of an official movie trailer.</p>
+	<p>Please enter the YouTube URL of an official movie trailer. </p>
 	<p><input type="url" name="trailer" placeholder="Official trailer..." value="<?=$trailer?>" /></p>
 
-	<label for="trailer_confirm">
+	<label>
 		<input type="checkbox" name="trailer_confirm" value="yes" <?=echo_checkbox($meta['trailer_confirm'][0],'yes')?>>
 		Yes, this is the correct trailer for this movie.
 	</label>
@@ -42,11 +43,12 @@ function movie_links_content($post) {
 
 	<br><br>
 
+	<a href="https://www.google.ca/search?q=<?=urlencode($post->post_title)?>+official+website" target="_blank" class="button right">Search for Website</a>
 	<h3>Website</h3>
 	<p>Please enter the URL of the official movie website.</p>
 	<p><input type="url" name="website" placeholder="Official website..." value="<?=$website?>" /></p>
 
-	<label for="website_confirm">
+	<label>
 		<input type="checkbox" name="website_confirm" value="yes"  <?=echo_checkbox($meta['website_confirm'][0],'yes')?>>
 		Yes, this is the correct website for this movie.
 	</label>
@@ -86,8 +88,8 @@ function movie_links_meta_save($post_id) {
 	// Check for input and sanitizes/saves if needed
 	save_if_changed('trailer', $post_id, true);
 	save_if_changed('website', $post_id, true);
-	update_post_meta($post_id, 'trailer_confirm', (isset($_POST['trailer_confirm']) ? $_POST['trailer_confirm'] : ''));
-	update_post_meta($post_id, 'website_confirm', (isset($_POST['website_confirm']) ? $_POST['website_confirm'] : ''));
+	save_if_changed('trailer_confirm', $post_id, true);
+	save_if_changed('website_confirm', $post_id, true);
 }
 
 ?>

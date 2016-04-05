@@ -25,7 +25,7 @@ function get_host($url) {
 // Return first result of a Google search for possible website, trailer, etc.
 function suggest_url($query) {
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, 'http://www.google.com/search?q='.$query.'&btnI');
+	curl_setopt($ch, CURLOPT_URL, 'https://www.google.ca/search?q='.$query.'&btnI');
 	curl_setopt($ch, CURLOPT_HEADER, true);
 	// FOLLOWLOCATION is necessary to return the true URL and not the Google redirect
 	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -218,7 +218,7 @@ if (empty($search) && isset($_GET['status'])) {
       )
 	  )
 	);
-	echo json_encode($json_output, JSON_UNESCAPED_SLASHES);
+	echo json_encode($json_output);
 }
 
 ?>

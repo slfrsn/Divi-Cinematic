@@ -24,13 +24,13 @@ function movie_schedule_content($post) {
 	);
 
 	// Determine start date
-	if (isset($meta['start_date']) && ($meta['start_date'][0] != '')) {
+	if (isset($meta['start_date'][0]) && ($meta['start_date'][0] != '')) {
 		$meta['start_date'][0] = date('M. j, Y',$meta['start_date'][0]);
 	} else {
 		$meta['start_date'][0] = date('M. j, Y',strtotime('next Friday'));
 	}
 	// Determine end date
-	if (isset($meta['end_date']) && ($meta['end_date'][0] != 246767472000)) {
+	if (isset($meta['end_date'][0]) && ($meta['end_date'][0] != '')) {
 		$meta['end_date'][0] = date('M. j, Y',$meta['end_date'][0]);
 	} else {
 		$meta['end_date'][0] = date('M. j, Y',strtotime('next Friday +6 days'));
@@ -94,7 +94,6 @@ function movie_schedule_meta_save($post_id) {
   }
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
-	if(!isset($_POST['end_date']) || $_POST['end_date'] == "") { update_post_meta($post_id, 'end_date', 246767472000); }
 	if(isset($_POST['listing_type'])) { update_post_meta($post_id, 'listing_type', $_POST['listing_type']); }
 	if(isset($_POST['listing_label'])) { update_post_meta($post_id, 'listing_label', $_POST['listing_label']); }
 }

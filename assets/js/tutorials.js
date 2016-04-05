@@ -80,14 +80,9 @@ jQuery(document).ready(function($){
 						position: 'right'
 	        },
 	        {
-	          element:  'label[for="trailer_confirm"]',
-	          intro: 	  'Check this box again.<br><br><strong>Note:</strong> If you\'re cloning a movie there\'s no need to actually confirm if the trailer and website are correct. That should have been done when the movie listing was created the first time. Instead, just click the checkbox and move on.',
-						position: 'bottom'
-	        },
-	        {
-	          element:  'label[for="website_confirm"]',
-	          intro: 	  'Check this box again.<br><br><strong>Note:</strong> If you\'re cloning a movie there\'s no need to actually confirm if the trailer and website are correct. That should have been done when the movie listing was created the first time. Instead, just click the checkbox and move on.',
-						position: 'bottom'
+	          element:	'input[name=end_date]',
+	          intro: 	 	'Correct the end date.',
+						position: 'right'
 	        },
 	        {
 	          element:  '#publish',
@@ -104,11 +99,12 @@ jQuery(document).ready(function($){
 	if($('body').hasClass('post-type-movies') && $('body').hasClass('edit-php') && $('.clone').length) {
 		var target = '.page-title-action';
 		var color = $('.button-primary').css('background');
-		var button = '<button class="page-title-action" id="tutorial" style="margin-left:4px;background:' + color + ';color:#fff;cursor:pointer;">How to Clone a Movie</button>';
+		var button = '<a href="#" class="page-title-action" id="tutorial">How to Clone a Movie</a>';
 		// Insert our tutorial button at the top of the page
 		$(button).insertAfter(target);
 
 		$('#tutorial').click(function(e) {
+			e.preventDefault();
 			// Make the first set of row actions visible so we can target them
 			$('.row-actions').first().css('left','0');
 
