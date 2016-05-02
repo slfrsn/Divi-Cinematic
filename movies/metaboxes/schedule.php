@@ -69,6 +69,7 @@ function movie_schedule_content($post) {
 // Save the custom meta input
 add_action('save_post', 'movie_schedule_meta_save');
 function movie_schedule_meta_save($post_id) {
+	$meta = get_post_meta($post_id);
 	// Check save status
 	$is_autosave = wp_is_post_autosave($post_id);
 	$is_revision = wp_is_post_revision($post_id);
@@ -84,11 +85,11 @@ function movie_schedule_meta_save($post_id) {
 	}
 	// Check for input and sanitizes/saves if needed
 	$allowed_tags = '<b><strong><em><del><a><br><p>';
-	if (!empty($_POST['showtimes'])) {
+	if (isset($_POST['showtimes'])) {
     $data=strip_tags(htmlspecialchars_decode($_POST['showtimes']), $allowed_tags);
     update_post_meta($post_id, 'showtimes', $data );
   }
-	if (!empty($_POST['notes'])) {
+	if (isset($_POST['notes'])) {
     $data=strip_tags(htmlspecialchars_decode($_POST['notes']), $allowed_tags);
     update_post_meta($post_id, 'notes', $data );
   }
