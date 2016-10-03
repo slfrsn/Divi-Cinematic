@@ -74,6 +74,7 @@ function movie_details_meta_save($post_id) {
 	$fetched = get_post_meta($post_id, 'fetched', true);
 	if ($fetched) {
 		update_post_meta($post_id, 'fetched', 0);
+		wp_set_object_terms($post_id, null, 'genre');
 		return;
 	}
 	// Check for input and sanitizes/saves if needed

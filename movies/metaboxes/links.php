@@ -22,7 +22,7 @@ function movie_links_content($post) {
 		Yes, this is the correct trailer for this movie.
 	</label>
 
-	<?php if (!empty($trailer)) { // If a trailer URL exists, show the trailer preview box
+	<?php if (!empty($trailer) && $trailer != ' ') { // If a trailer URL exists, show the trailer preview box
 		// Grab the YouTube ID from the trailer URL
 		$trailer = parse_url($trailer);
 		parse_str($trailer['query'], $query);

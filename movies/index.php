@@ -43,7 +43,7 @@ if (!function_exists('movies_post_type')) {
 			'label'               => 'Movies',
 			'description'         => 'Movies',
 			'labels'              => $labels,
-			'supports'            => array('title', 'thumbnail', ),
+			'supports'            => array('title', 'thumbnail',),
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
@@ -185,8 +185,8 @@ if (!function_exists('movies_post_type')) {
 			if (empty($start_date)) { $column_data = '<span style="color:#dd3d36;">Missing start date</span>';	}
 			if (($current_date < $start_date)) { $column_data = 'Coming Soon';	}
 			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#dd3d36;">Expired</span>';	}
-			if (get_post_status ($post_ID ) != 'publish' ) { $column_data = '<span style="color:#aaa;">Not published</span>';	}
-			if (get_post_status ($post_ID ) == 'future' ) { $column_data = 'Scheduled';	}
+			if (get_post_status ($post_ID) != 'publish') { $column_data = '<span style="color:#aaa;">Not published</span>';	}
+			if (get_post_status ($post_ID) == 'future') { $column_data = 'Scheduled';	}
 			if (!empty($listing_type) && ($listing_type == 'popup')) { $column_data = 'Showing as Popup';	}
 			if (!empty($listing_type) && ($listing_type == 'widget')) { $column_data = 'Showing in Widget';	}
 
@@ -203,21 +203,21 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Handle the Date Column Sorting
-	add_filter( 'request', 'date_column_orderby' );
-	function date_column_orderby( $vars ) {
+	add_filter('request', 'date_column_orderby');
+	function date_column_orderby($vars) {
 		// Sort by Start Date
 	  if (isset($vars['orderby']) && 'start_date' == $vars['orderby']) {
 	    $vars = array_merge($vars, array(
 	      'meta_key' => 'start_date',
 	      'orderby' => 'meta_value_num'
-	    ));
+	  ));
 	  }
 		// Sort by End Date
 	  if (isset($vars['orderby']) && 'end_date' == $vars['orderby']) {
 	    $vars = array_merge($vars, array(
 	      'meta_key' => 'end_date',
 	      'orderby' => 'meta_value_num'
-	    ));
+	  ));
 	  }
 	  return $vars;
 	}
@@ -361,7 +361,7 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Confirm film rating via AJAX
-	add_action( 'wp_ajax_movie_confirm_film_rating', 'movie_confirm_film_rating_ajax' );
+	add_action('wp_ajax_movie_confirm_film_rating', 'movie_confirm_film_rating_ajax');
 	function movie_confirm_film_rating_ajax() {
 		$cpbc_url = 'http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle='.urlencode($_POST['title']);
 		echo file_get_contents($cpbc_url);
@@ -369,7 +369,7 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Check API status via AJAX
-	add_action( 'wp_ajax_movie_api_status', 'movie_api_status_ajax' );
+	add_action('wp_ajax_movie_api_status', 'movie_api_status_ajax');
 	function movie_api_status_ajax() {
 		$api_url		  = get_stylesheet_directory_uri().'/movies/api.php?status';
 		$api_request  = file_get_contents($api_url);
@@ -379,10 +379,20 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// AJAX API function to fetch movie details without multiple page reloads
+	add_action('wp_ajax_movie_suggestions', 'movie_suggestions_ajax');
+	add_action('wp_ajax_nopriv_my_update_pm', 'movie_suggestions_ajax');
+	function movie_suggestions_ajax() {
+		$api_url		 = get_stylesheet_directory_uri().'/movies/api.php?suggest='.urlencode($_POST['title']);
+		$api_request = file_get_contents($api_url);
+		echo $api_request;
+		wp_die();
+	}
+
+	// AJAX API function to fetch movie details without multiple page reloads
 	add_action('wp_ajax_movie_fetch', 'movie_details_ajax');
 	add_action('wp_ajax_nopriv_my_update_pm', 'movie_details_ajax');
 	function movie_details_ajax() {
-		$api_url		 = get_stylesheet_directory_uri().'/movies/api.php?s='.urlencode($_POST['title']);
+		$api_url		 = get_stylesheet_directory_uri().'/movies/api.php?imdb='.urlencode($_POST['imdb']);
 		$api_request = file_get_contents($api_url);
 		$movie_obj 	 = json_decode($api_request,true);
 		$movie 			 = $movie_obj['movie'];
@@ -410,41 +420,34 @@ if (!function_exists('movies_post_type')) {
 				$genre_string .= $genre.',';
 			}
 		}
-
 		// This is the only output sent back to the AJAX call
-		// echo $genre_string;
 		echo $api_request;
-
-		// Set the poster as the featured image
+		// Add the poster to the media library
 		if (!empty($movie['poster'])) {
-			// Magic sideload image returns an HTML image, not an ID
-			$media = media_sideload_image($movie['poster'], $_POST['id']);
-			// Therefore we must find it so we can set it as featured ID
-			if(!empty($media) && !is_wp_error($media)) {
-				$args = array(
-					'post_type' => 'attachment',
-					'posts_per_page' => -1,
-					'post_status' => 'any',
-					'post_parent' => $_POST['id']
-				);
-				// Reference new image to set as featured
-				$attachments = get_posts($args);
-				if(isset($attachments) && is_array($attachments)) {
-					foreach($attachments as $attachment) {
-						// Grab source of full size images (so no 300x150 nonsense in path)
-						$image = wp_get_attachment_image_src($attachment->ID, 'full');
-						// Determine if in the $media image we created, the string of the URL exists
-						if(strpos($media, $image[0]) !== false) {
-							// If so, we found our image. set it as thumbnail
-							set_post_thumbnail($_POST['id'], $attachment->ID);
-							// Only want one image
-							break;
-						}
-					}
-				}
-			}
+			$media = media_sideload_image($movie['poster'], $_POST['id'], (!empty($movie['title']) ? $movie['title'] : $_POST['title']));
 		}
 		wp_die();
+	}
+
+	// Set the movie poster on the save action
+	add_action('save_post', 'set_movie_poster');
+	function set_movie_poster() {
+		if (!isset($GLOBALS['post']->ID))
+			return NULL;
+
+		$args = array(
+			'order'          => 'ASC',
+			'post_mime_type' => 'image',
+			'post_parent'    => get_the_ID(),
+			'post_status'    => NULL,
+			'post_type'      => 'attachment'
+		);
+
+		$attached_image = get_children($args);
+		if ($attached_image) {
+			foreach ($attached_image as $attachment_id => $attachment)
+				set_post_thumbnail(get_the_ID(), $attachment_id);
+		}
 	}
 
 	// =============================
@@ -457,8 +460,8 @@ if (!function_exists('movies_post_type')) {
 	  global $post;
 
 		// Make sure to only load the scripts on the movie post pages
-	  if ($hook == 'post-new.php' || $hook == 'post.php' ) {
-	    if ('movies' === $post->post_type ) {
+	  if ($hook == 'post-new.php' || $hook == 'post.php') {
+	    if ('movies' === $post->post_type) {
 				wp_enqueue_style ('movie-lazy-youtube-css', get_stylesheet_directory_uri() . '/assets/css/lazy-youtube.css');
 				wp_enqueue_style ('movie-json-viewer-css', get_stylesheet_directory_uri() . '/assets/css/json-view.css');
 				wp_enqueue_style ('movie-movies-css', get_stylesheet_directory_uri() . '/assets/css/movies.css');

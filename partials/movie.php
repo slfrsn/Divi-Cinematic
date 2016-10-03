@@ -33,7 +33,7 @@
 
 					?>
 				<?=convert_to_string($meta['info-bar'], ' | ')?>
-				<?php if(isset($meta['website'][0]) && $meta['website_confirm'][0] != '') { echo '| <a href="'.$meta['website'][0].'" target="_blank" title="Official Website" rel="nofollow external">Official Website</a>'; } ?>
+				<?php if(isset($meta['website'][0]) && !empty($meta['website_confirm'][0])) { echo '| <a href="'.$meta['website'][0].'" target="_blank" title="Official Website" rel="nofollow external">Official Website</a>'; } ?>
 			</p>
 
 			<div class="movie_info">
@@ -70,7 +70,7 @@
 		</div>
 	</div>
 
-	<?php if(isset($meta['trailer'][0]) && $meta['trailer_confirm'][0] != '') { ?>
+	<?php if(isset($meta['trailer'][0]) && !empty($meta['trailer_confirm'][0])) { ?>
 	<div class="white_popup_bottom">
 		<iframe width="900" height="400" src="<?=preg_replace("/\s*[a-zA-Z\/\/:\.]*youtube.com\/watch\?v=([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i","//www.youtube.com/embed/$1",$meta['trailer'][0])?>?rel=0&amp;autohide=2&amp;iv_load_policy=3&amp;modestbranding=1&amp;color=white" frameborder="0" allowfullscreen></iframe>
 	</div>

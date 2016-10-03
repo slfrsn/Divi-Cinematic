@@ -1,15 +1,125 @@
 jQuery(document).ready(function($){
 
+	function sleep(time) {
+		return new Promise((resolve) => setTimeout(resolve, time));
+	}
+
+	function set_status_light(state, colour, text, description, is_link) {
+		if (state === 0) {
+			$('#api_spinner').removeClass('status-light').css({ 'visibility':'visible','background-color':'' });
+		} else {
+			$('#api_spinner').addClass('status-light').css('visibility','visible');
+			$('.status-light').css('background-color',colour);
+		}
+		if (is_link) {
+			$('#api_status').replaceWith('<a id="api_status" href="https://trakt.tv/search?query=' + encodeURIComponent($('#title').val()) + '" target="_blank" title="Search Trakt.tv\'s website">' + text +'</a>');
+		} else {
+			$('#api_status').replaceWith('<span id="api_status" title="' + description + '">' + text +'</span>');
+		}
+	}
+
+	function toggle_fetch_button(state) {
+		if (state === 0) {
+			$('#load_movie').text('Continue').addClass('continue-fetch');
+			$('#publish').addClass('button-disabled');
+		} else {
+			$('#load_movie').text('Fetch Movie Details').removeClass('continue-fetch');
+			$('#publish').removeClass('button-disabled');
+		}
+	}
+
+	function validate_response(response) {
+	  try {
+	    var json = JSON.parse(response);
+	    if (json && typeof json === "object") {
+				if (json.status) {
+					set_status_light(1, '#F44336', 'Error (' + json.status + ')', json.description, true);
+					sleep(0).then(() => {
+						alert('API Error (' + json.status + ') : ' + json.description);
+					});
+					return false;
+				}
+				if (json.length < 1) {
+					return false;
+				}
+				return json;
+	    }
+	  }
+	  catch (e) { }
+	  return false;
+	};
+
+	function submit_movie(imdb) {
+		set_status_light(0, '', 'Fetching...', '', false);
+		var dataMovie = {
+	    action: 'movie_fetch',
+	    id: $('#post_id').val(),
+      imdb: imdb
+		};
+		$.post(ajaxurl, dataMovie, function(response) {
+			var json = validate_response(response);
+			if (json) {
+				var genres = json.movie.genres ? json.movie.genres : [''];
+				var title  = json.movie.title ? json.movie.title : '';
+				// Save the response (the string of genres) to a hidden input.
+				// If we don't do this they get overwritten when we save because
+				// the checkboxes are all unchecked.
+				$('input[name="genres"]').val(genres.join(','));
+				// Update the title to the official movie format / spelling
+				$('#title').val(title);
+				// Save and reload the page.
+				$('#save-post').click();
+			} else {
+				set_status_light(1, '#F44336', 'No results', '', true);
+			}
+		});
+	}
+
 	// Turn the status light into a spinner
 	$('#api_spinner').addClass('status-light').css('visibility','visible');
 	// Check the status of our movie API
 	$.post(ajaxurl, {'action': 'movie_api_status'}, function(response) {
 		if(response && response === 'online') {
-		  $('.status-light').css('background-color','#8BC34A');
-		  $('#api_status').text('API is online');
+		  set_status_light(1, '#8BC34A', 'API is online', '', false);
 		} else {
-		  $('.status-light').css('background-color','#F44336');
-		  $('#api_status').text('API is offline');
+		  set_status_light(1, '#F44336', 'API is offline', '', false);
+		}
+	});
+
+	// Load the movie details via AJAX call
+	$('#load_movie').click(function(e) {
+		e.preventDefault(); // Prevent the link from doing it's thing
+		if ($(this).hasClass('continue-fetch')) {
+			submit_movie($("input:radio[name='suggestions']:checked").val());
+		} else {
+			$('#movie-suggestions').remove();
+		  set_status_light(0, '', 'Searching...', '', false);
+			$('input[name=fetched]').val(1)
+			// Function to call, post ID, and post title
+			var dataMovie = {
+		    action: 'movie_suggestions',
+		    id: $('#post_id').val(),
+	      title: $('#title').val()
+			};
+			$.post(ajaxurl, dataMovie, function(response) {
+				var json = validate_response(response);
+				if (json && json.length > 1) {
+					console.log(json);
+					var suggestions = '<div class="categorydiv" id="movie-suggestions"><p>Multiple matches found. Please make a selection and press Continue.</p><div class="tabs-panel">';
+					$.each(json, function(i, item) {
+						console.log(json[i]);
+					  suggestions += '<label><input value="' + json[i].imdb + '" type="radio" name="suggestions" ' + (i == 0 ? 'checked="checked"' : '') + '><strong>' + json[i].year + ':</strong> ' + json[i].title + '</label>';
+					})
+					suggestions += '</div></div>';
+					$('.fetch-details').append(suggestions);
+					set_status_light(1, '#FFC107', json.length + ' matches', '', false);
+					toggle_fetch_button(0);
+				} else if (!json) {
+					set_status_light(1, '#F44336', 'No results', '', true);
+				} else {
+					submit_movie(json[0].imdb);
+				}
+			});
 		}
 	});
 
@@ -46,43 +156,7 @@ jQuery(document).ready(function($){
   	});
 	});
 
-
-	// Load the movie details via AJAX call
-	$('#load_movie').click(function(e) {
-		e.preventDefault(); // Prevent the link from doing it's thing
-		// Provide visual confirmation that the AJAX call is in progress
-		$('#api_status').html('Fetching...');
-		$('#api_spinner').removeClass('status-light').css({ 'visibility':'visible','background-color':'' });
-		$('input[name=fetched]').val(1)
-		// Function to call, post ID, and post title
-		var dataMovie = {
-	    action: 'movie_fetch',
-	    id: $('#post_id').val(),
-      title: $('#title').val()
-		};
-		$.post(ajaxurl, dataMovie, function(response) {
-			// Make sure the response is valid JSON
-			if(response && response.indexOf('<') == -1){
-				var json   = $.parseJSON(response);
-				var genres = json.movie.genres;
-				var title  = json.movie.title;
-				// Save the response (the string of genres) to a hidden input.
-				// If we don't do this they get overwritten when we save because
-				// the checkboxes are all unchecked.
-				$('input[name="genres"]').val(genres.join(','));
-				// Update the title to the official movie format / spelling
-				$('#title').val(title);
-				// Save and reload the page.
-				$('#save-post').click();
-			} else {
-				$('#api_spinner').addClass('status-light').css('visibility','visible');
-	  		$('.status-light').css('background-color','#F44336'); // Set it to red in case it fails
-			  $('#api_status').text('No results');
-			}
-		});
-	});
-
-	// Format the JSON response data if there is any
+	// Prettify the JSON response data if there is any
 	var response = $('#movie_response .inside').html();
 	if ($.trim(response) !== 'No response data.') {
 		$('#movie_response .inside').JSONView(response, { collapsed: true });
