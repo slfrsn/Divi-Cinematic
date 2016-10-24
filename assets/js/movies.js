@@ -12,7 +12,7 @@ jQuery(document).ready(function($){
 			$('.status-light').css('background-color',colour);
 		}
 		if (is_link) {
-			$('#api_status').replaceWith('<a id="api_status" href="https://trakt.tv/search?query=' + encodeURIComponent($('#title').val()) + '" target="_blank" title="Search Trakt.tv\'s website">' + text +'</a>');
+			$('#api_status').replaceWith('<a id="api_status" href="https://www.themoviedb.org/search?query=' + encodeURIComponent($('#title').val()) + '" target="_blank" title="Search TMDB\'s website">' + text +'</a>');
 		} else {
 			$('#api_status').replaceWith('<span id="api_status" title="' + description + '">' + text +'</span>');
 		}
@@ -32,12 +32,8 @@ jQuery(document).ready(function($){
 	  try {
 	    var json = JSON.parse(response);
 	    if (json && typeof json === "object") {
-				if (json.status) {
-					set_status_light(1, '#F44336', 'Error (' + json.status + ')', json.description, true);
-					sleep(0).then(() => {
-						alert('API Error (' + json.status + ') : ' + json.description);
-					});
-					return false;
+				if (json.status_code) {
+					alert(json.status_message);
 				}
 				if (json.length < 1) {
 					return false;
@@ -49,12 +45,12 @@ jQuery(document).ready(function($){
 	  return false;
 	};
 
-	function submit_movie(imdb) {
+	function submit_movie(tmdb) {
 		set_status_light(0, '', 'Fetching...', '', false);
 		var dataMovie = {
 	    action: 'movie_fetch',
 	    id: $('#post_id').val(),
-      imdb: imdb
+      tmdb: tmdb
 		};
 		$.post(ajaxurl, dataMovie, function(response) {
 			var json = validate_response(response);
@@ -104,20 +100,21 @@ jQuery(document).ready(function($){
 			$.post(ajaxurl, dataMovie, function(response) {
 				var json = validate_response(response);
 				if (json && json.length > 1) {
-					console.log(json);
 					var suggestions = '<div class="categorydiv" id="movie-suggestions"><p>Multiple matches found. Please make a selection and press Continue.</p><div class="tabs-panel">';
 					$.each(json, function(i, item) {
 						console.log(json[i]);
-					  suggestions += '<label><input value="' + json[i].imdb + '" type="radio" name="suggestions" ' + (i == 0 ? 'checked="checked"' : '') + '><strong>' + json[i].year + ':</strong> ' + json[i].title + '</label>';
+					  suggestions += '<label><input value="' + json[i].id + '" type="radio" name="suggestions" ' + (i == 0 ? 'checked="checked"' : '') + '><strong>' + json[i].year + ':</strong> ' + json[i].title + '</label>';
 					})
 					suggestions += '</div></div>';
 					$('.fetch-details').append(suggestions);
 					set_status_light(1, '#FFC107', json.length + ' matches', '', false);
 					toggle_fetch_button(0);
+				} else if (json.status_code) {
+					set_status_light(1, '#F44336', 'Error: ' + json.status_code, json.status_message, false);
 				} else if (!json) {
 					set_status_light(1, '#F44336', 'No results', '', true);
 				} else {
-					submit_movie(json[0].imdb);
+					submit_movie(json[0].id);
 				}
 			});
 		}

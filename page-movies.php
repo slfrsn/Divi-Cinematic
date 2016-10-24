@@ -18,16 +18,16 @@ if ($meta['status'][0] == 'nowplaying') {
 		'post_type'		  => 'movies',
 		'meta_query'    => array(
 			array(
-				'key'   	  => 'start_date', //
+				'key'   	  => 'start_date',
 				'value' 	  => strtotime('today'),
 				'type' 		  => 'NUMERIC',
-				'compare'   => '<=', // if start date is less than or equal to today.
+				'compare'   => '<='
 			),
 			array(
 				'key'     => 'end_date',
-				'value'   => strtotime('today'), // Thu, 19 Mar 2015 00:00:00 GMT
+				'value'   => strtotime('today'),
 				'type' 		=> 'NUMERIC',
-				'compare' => '>=', // if end date is greater than or equal to midnight today.
+				'compare' => '>='
 			),
       array(
 		    'key' 		=> 'listing_type',
@@ -46,13 +46,13 @@ if ($meta['status'][0] == 'nowplaying') {
 				'key'   	=> 'start_date',
 				'value' 	=> strtotime('now'),
 				'type' 		=> 'NUMERIC',
-				'compare' => '>', // value -> operator -> key
+				'compare' => '>'
 			),
 			array(
 				'key'   	=> 'start_date',
-				'value' 	=> strtotime('-1 week'), // today minus one week
+				'value' 	=> strtotime('-1 week'),
 				'type' 		=> 'NUMERIC',
-				'compare' => '>', // value -> operator -> key
+				'compare' => '>'
 			),
       array(
 		    'key' 		=> 'listing_type',
@@ -68,21 +68,21 @@ $popups_args = array (
 	'post_type'		  => 'movies',
 	'meta_query'    => array(
 		array(
-			'key'   	  => 'start_date', //
+			'key'   	  => 'start_date',
 			'value' 	  => strtotime('today'),
 			'type' 		  => 'NUMERIC',
-			'compare'   => '<=', // if start date is less than or equal to today.
+			'compare'   => '<='
 		),
 		array(
-			'key'     => 'end_date',
-			'value'   => strtotime('today'), // Thu, 19 Mar 2015 00:00:00 GMT
-			'type' 		=> 'NUMERIC',
-			'compare' => '>=', // if end date is greater than or equal to midnight today.
+			'key'       => 'end_date',
+			'value'     => strtotime('today'),
+			'type' 		  => 'NUMERIC',
+			'compare'   => '>='
 		),
     array(
-	    'key' 		=> 'listing_type',
-			'value'		=> 'popup',
-			'compare' => 'LIKE'
+	    'key' 		  => 'listing_type',
+			'value'		  => 'popup',
+			'compare'   => 'LIKE'
     )
 	)
 );

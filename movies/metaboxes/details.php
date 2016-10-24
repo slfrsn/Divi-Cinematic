@@ -45,7 +45,7 @@ function movie_details_content($post) {
 			<div id="rating-response" class="">
 				<p>
 					<span></span>
-					<a href="http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle=<?=urlencode(the_title())?>" target="_blank">Open website to confirm</a>
+					<a href="http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle=<?=urlencode(preg_replace("/[^a-zA-Z0-9\s]+/", "",get_the_title()))?>" target="_blank">Open website to confirm</a>
 				</p>
 			</div>
 		<?php } ?>

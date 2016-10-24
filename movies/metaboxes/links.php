@@ -43,7 +43,7 @@ function movie_links_content($post) {
 
 	<br><br>
 
-	<a href="https://www.google.ca/search?q=<?=urlencode($post->post_title)?>+official+website" target="_blank" class="button right">Search for Website</a>
+	<a href="https://duckduckgo.com/?q=<?=urlencode($post->post_title)?>+official+website" target="_blank" class="button right">Search for Website</a>
 	<h3>Website</h3>
 	<p>Please enter the URL of the official movie website.</p>
 	<p><input type="url" name="website" placeholder="Official website..." value="<?=$website?>" /></p>

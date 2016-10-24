@@ -29,6 +29,7 @@ function movie_schedule_content($post) {
 	} else {
 		$meta['start_date'][0] = date('M. j, Y',strtotime('next Friday'));
 	}
+	
 	// Determine end date
 	if (isset($meta['end_date'][0]) && ($meta['end_date'][0] != '')) {
 		$meta['end_date'][0] = date('M. j, Y',$meta['end_date'][0]);

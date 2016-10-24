@@ -15,7 +15,7 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element: 	'.fetch-details',
-	          intro: 		'Click this button to fetch the movie details. The page <em>should</em> reload with everything filled out correctly.<br><br><strong>Note:</strong> This feature depends on Google to work and it can be... <em>unpredictable</em>. If it isn\'t working for a movie, you\'ll have to search for the information on Google and enter it manually.<br><br>The API status light gives us a way to see if the source for <strong>Fetch Movie Details</strong> is online. If the light is amber or red, you might be on your own.',
+	          intro: 		'Click <strong>Fetch Movie Details</strong>. The page should reload with everything filled out correctly.<br><br><strong>Note:</strong> The API status light gives us a way to see if the source for <strong>Fetch Movie Details</strong> is online. If the light is amber or red, you might be on your own.',
 						position: 'left'
 	        },
 	        {
@@ -25,7 +25,7 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element:  '#movie_details',
-	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> The American film ratings are converted to the closest Canadian equivalents and are sometimes wrong. Always check to make sure the rating is accurate by clicking <strong>Confirm Film Rating</strong>.',
+	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> If <strong>Fetch Movie Details</strong> failed to assign a film rating, you can check for one by clicking <strong>Confirm Film Rating</strong>.',
 						position: 'right'
 	        },
 	        {

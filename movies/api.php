@@ -8,145 +8,130 @@ if ($dev_mode) {
   error_reporting(-1);
 }
 
-function trakt($url) {
-  $ch = curl_init();
-  curl_setopt($ch, CURLOPT_URL, $url);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-  curl_setopt($ch, CURLOPT_HEADER, FALSE);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-    "Content-Type: application/json",
-    "trakt-api-version: 2",
-    "trakt-api-key: a51efbf689db9b21310f12961a2a5f95babd01ed60a108fd3c70910627b2f41a"
+$key = 'dc6299fd1adb4e32cf16017eecb33295'; // TMDB API Key
+$urls = array(
+  api     => 'https://api.themoviedb.org/3',
+  image   => 'https://image.tmdb.org/t/p/w780',
+  youtube => 'https://www.youtube.com/watch?v='
+);
+
+function tmdb($url) {
+  $curl = curl_init();
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_POSTFIELDS => "{}",
+    CURLOPT_HTTPHEADER => array(
+      "content-type: application/json"
+    ),
   ));
-  $response = curl_exec($ch);
-  curl_close($ch);
-  return $response;
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
+  curl_close($curl);
+
+  if ($err) {
+    return null;
+  } else {
+    if (strpos($response, 'status_code') !== false) {
+      echo $response;
+      if (!$dev_mode) exit;
+    }
+    return $response;
+  }
 }
 
 function sort_by_year($a, $b) {
-	if($a['movie']['year'] == $b['movie']['year']){ return 0 ; }
-	return ($a['movie']['year'] < $b['movie']['year']) ? 1 : -1;
+	if($a['release_date'] == $b['release_date']){ return 0 ; }
+	return ($a['release_date'] < $b['release_date']) ? 1 : -1;
 }
 
-$status = (isset($_GET['status']) ? true : false);
+$status  = (isset($_GET['status']) ? true : false);
 $suggest = (!empty($_GET['suggest']) ? urlencode($_GET['suggest']) : null);
-$imdb = (!empty($_GET['imdb']) ? urlencode($_GET['imdb']) : null);
+$tmdb    = (!empty($_GET['tmdb']) ? urlencode($_GET['tmdb']) : null);
 
 if ($status) {
-  // It's helpful to know if our API is working
-  // If the following API call returns a valid title, we'll assume it's working
+  // If the following API call returns a token we'll assume it's working
   $test            = [];
-	$test['request'] = trakt('http://api.trakt.tv/movies/tt0848228');
+	$test['request'] = tmdb($urls['api'].'/authentication/token/new?api_key='.$key);
 	$test['decoded'] = json_decode($test['request'],true);
-  $test['status']  = isset($test['decoded']['title']) ? 'online' : 'offline';
+  $test['status']  = isset($test['decoded']['success']) ? 'online' : 'offline';
    // Return the status of the API to our movie edit page
   echo json_encode(array('status' => $test['status']));
 }
 
 if ($suggest) {
-  $request = trakt('https://api.trakt.tv/search/movie?query='.$suggest.'&type=movie&fields=title');
+  $request = tmdb($urls['api'].'/search/movie?api_key='.$key.'&language=en-US&query='.$suggest.'&page=1');
   $movies = json_decode($request, true);
 
-  usort($movies, 'sort_by_year');
+  usort($movies['results'], 'sort_by_year');
 
-  if (count($movies) > 0) {
+  if (count($movies['results']) > 0) {
     $suggestions = [];
-    foreach ($movies as $movie) {
-    	$title = (!empty($movie['movie']['title']) ? $movie['movie']['title'] : null);
-    	$year  = (!empty($movie['movie']['year']) ? $movie['movie']['year'] : 'NA');
-      $id    = (!empty($movie['movie']['ids']['imdb']) ? $movie['movie']['ids']['imdb'] : null);
+    foreach ($movies['results'] as $movie) {
+    	$title = (!empty($movie['title']) ? $movie['title'] : null);
+    	$year  = (!empty($movie['release_date']) ? date('Y', strtotime($movie['release_date'])) : 'NA');
+      $id    = (!empty($movie['id']) ? $movie['id'] : null);
       $suggestions[] = array(
         'title' => $title,
         'year'  => $year,
-        'imdb'  => $id
+        'id'    => $id
       );
     }
     echo json_encode($suggestions);
-  } else {
-    echo json_encode(array());
   }
 }
 
-if ($imdb) {
-	$requests['movie'] = trakt('https://api.trakt.tv/movies/'.$imdb.'/?extended=full,images');
-	$movie = json_decode($requests['movie'], true);
+if ($tmdb) {
+	$request = tmdb($urls['api'].'/movie/'.$tmdb.'?api_key='.$key.'&language=en-US&append_to_response=videos,credits,release_dates');
+	$movie = json_decode($request, true);
 
-	$requests['trakt'] = trakt('https://api.trakt.tv/movies/'.$imdb.'/people');
-	$people = json_decode($requests['trakt'],true);
-
-  if ($dev_mode) {
-    echo '<strong>Movie Summary Request</strong><br>'.json_encode($movie).'<br><br>';
-    echo '<strong>Movie Cast Request</strong><br>'.json_encode($people).'<br><br>';
-  }
-
-  if ((strpos($requests['movie'], 'status') !== false) && !$dev_mode) {
-    $error = json_decode($requests['movie']);
-    $error = array(
-      'status' => $error->status,
-      'description' => 'undefined'
-    );
-    $status_codes = array(
-      '200' => 'Success',
-      '201' => 'Success - new resource created (POST)',
-      '204' => 'Success - no content to return (DELETE)',
-      '400' => 'Bad Request - request couldn\'t be parsed',
-      '401' => 'Unauthorized - OAuth must be provided',
-      '403' => 'Forbidden - invalid API key or unapproved app',
-      '404' => 'Not Found - method exists, but no record found',
-      '405' => 'Method Not Found - method doesn\'t exist',
-      '409' => 'Conflict - resource already created',
-      '412' => 'Precondition Failed - use application/json content type',
-      '422' => 'Unprocessible Entity - validation errors',
-      '429' => 'Rate Limit Exceeded',
-      '500' => 'Server Error',
-      '503' => 'Service Unavailable - server overloaded (try again in 30s)',
-      '504' => 'Service Unavailable - server overloaded (try again in 30s)',
-      '520' => 'Service Unavailable - Cloudflare error',
-      '521' => 'Service Unavailable - Cloudflare error',
-      '522' => 'Service Unavailable - Cloudflare error'
-    );
-  	if (array_key_exists($error['status'], $status_codes)) {
-      $error['description'] = $status_codes[$error['status']];
-  	}
-    echo json_encode($error);
-  }
-
-	// Prepare "Search on Google / YouTube" query strings
-	$param['poster']  = $suggest.'+official+poster';
-	$param['website'] = $suggest.'+official+movie+website';
-	$param['trailer'] = $suggest.'+official+movie+trailer';
+  if ($dev_mode) { echo '<strong>Movie Summary Request</strong><br>'.json_encode($movie).'<br><br>'; }
 
 	// Prepare content variables
-	$title    = (!empty($movie['title']) ? $movie['title'] : ' ');
-	$year     = (!empty($movie['year']) ? $movie['year'] : ' ');
-	$duration = (!empty($movie['runtime']) ? $movie['runtime'] : ' ');
-	$rating   = (!empty($movie['certification']) ? $movie['certification'] : ' ');
-	$genres   = (!empty($movie['genres']) ? $movie['genres'] : ' ');
-	$cast     = ' ';
-              if (!empty($people['cast'])) {
+	$title    = (!empty($movie['title']) ? $movie['title'] : null);
+	$year     = (!empty($movie['release_date']) ? intval(date('Y', strtotime($movie['release_date']))) : null);
+	$duration = (!empty($movie['runtime']) ? $movie['runtime'] : null);
+	$rating   = null;
+              if (!empty($movie['release_dates']['results'])) {
+                foreach ($movie['release_dates']['results'] as $release) {
+                  if($release['iso_3166_1'] == 'CA') {
+                    if (isset($release['release_dates'][0]['certification'])) {
+                      $rating = $release['release_dates'][0]['certification'];
+                    }
+                  }
+                }
+              }
+	$genres   = [];
+              if (!empty($movie['genres'])) {
+                foreach ($movie['genres'] as $genre) {
+                  $genres[] = $genre['name'];
+                }
+              }
+	$cast     = null;
+              if (!empty($movie['credits']['cast'])) {
                 $i = 0;
-                foreach ($people['cast'] as $person) {
+                foreach ($movie['credits']['cast'] as $person) {
                   $i++;
-                  $cast .= $person['person']['name'];
+                  $cast .= $person['name'];
                   if($i == 8) break; // Stop after we've reached 8 cast members
-                  if(count($people['cast']) == $i) break; // Stop if our cast list has ended early
-                  // We break before this to prevent the last actor from having a trailing comma
+                  if(count($movie['credits']['cast']) == $i) break; // Stop if our cast list has ended early (prevents a trailing comma)
                   $cast .= ', ';
                 }
               }
-	$synopsis = (!empty($movie['overview']) ? $movie['overview'] : ' ');
-	$poster   = (!empty($movie['images']['poster']['medium']) ? $movie['images']['poster']['medium'] : null);
-	$trailer  = (!empty($movie['trailer']) ? $movie['trailer'] : ' ');
-	$website  = (!empty($movie['homepage']) ? $movie['homepage'] : ' '); // suggest_url($param['website']));
+	$synopsis = (!empty($movie['overview']) ? $movie['overview'] : null);
+	$poster   = (!empty($movie['poster_path']) ? $urls['image'].$movie['poster_path'] : null);
+	$trailer  = (!empty($movie['videos']['results']) ? $urls['youtube'].$movie['videos']['results'][0]['key'] : null);
+	$website  = (!empty($movie['homepage']) ? $movie['homepage'] : null);
 
-  // If the website or trailer are null, we need to fetch them for JSON response
-  // Normally this is done with AJAX after page load, but we'll have to sacrifice speed for output here
-	// $trailer  = ''; // (!empty($trailer) ? $trailer : suggest_url($param['trailer']));
-	// $website  = ''; // (!empty($homepage) ? $homepage : suggest_url($param['website']));
-  // Build the JSON string
 	$json_output = array(
     'movie'      => array(
       'title' 	 => $title,
+      'id'     	 => $tmdb,
       'year' 		 => $year,
       'duration' => $duration,
       'rating' 	 => $rating,
@@ -158,6 +143,7 @@ if ($imdb) {
       'website'  => $website
 	  )
 	);
+
   if ($dev_mode) { echo '<strong>Output to WordPress</strong><br>'; }
 	echo json_encode($json_output);
 }
