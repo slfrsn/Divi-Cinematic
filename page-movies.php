@@ -167,9 +167,9 @@ $movies_query = new WP_Query($movies_args); ?>
 					$css .= "-moz-transform:rotate(".$rotate."deg) scale(".$scale.");";
 					$css .= "-ms-transform:rotate(".$rotate."deg) scale(".$scale.");";
 					$css .= "-o-transform:rotate(".$rotate."deg) scale(".$scale.");";
-					$css .= "-moz-transition: all 0.".round((($top/50)+1))."s ease-in-out;";
-					$css .= "-webkit-transition: all 0.".round((($top/50)+1))."s ease-in-out;";
-					$css .= "transition: all 0.".round((($top/50)+1))."s ease-in-out;";
+					$css .= "-moz-transition:all 0.".round((($top/50)+1))."s ease-in-out;";
+					$css .= "-webkit-transition:all 0.".round((($top/50)+1))."s ease-in-out;";
+					$css .= "transition:all 0.".round((($top/50)+1))."s ease-in-out;";
 
 					?>
 

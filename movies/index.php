@@ -9,12 +9,6 @@
 
 // Developed by: Stef Friesen
 // URL: http://www.frsn.ca
-// Date Modified: August 31, 2015
-
-// The overhaul to the API and code structure in August 2015 has left behind
-// inconsistencies on variable names. Namely any variable that is referenced
-// from the frontend. If we change these it'll affect the existing movies on
-// their website. The best example of this is in movie_details_ajax()
 
 if (!function_exists('movies_post_type')) {
 
@@ -176,9 +170,13 @@ if (!function_exists('movies_post_type')) {
 	function status_column_content($column_name, $post_ID) {
 		if ($column_name == 'status') {
 			$start_date = get_post_meta($post_ID, 'start_date', true);
+			$start_week = (int)date('W', $start_date);
 			$end_date = get_post_meta($post_ID, 'end_date', true);
 			$listing_type = get_post_meta($post_ID, 'listing_type', true);
 			$current_date = strtotime('today');
+			$current_week = (int)date('W', $current_date);
+
+			$column_data = 'N/A';
 
 			// Status Conditions
 			if (!empty($start_date) && ($current_date >= $start_date) && (($current_date <= $end_date) || (empty($end_date)))) { $column_data = '<strong>Now Playing</strong>'; }

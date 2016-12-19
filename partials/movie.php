@@ -37,10 +37,19 @@
 			</p>
 
 			<div class="movie_info">
-				<?php
-					$comma = (empty($meta['early'][0]) ? '' : ', ');
-					echo '<div class="showtimes" style="background-color: '.et_get_option('secondary_nav_bg').'"><strong>Showtimes for: </strong>'.date('F j',$meta['start_date'][0]).' - '.date('F j',$meta['end_date'][0]).'</div>';
-				?>
+				<?php $comma = (empty($meta['early'][0]) ? '' : ', '); ?>
+				<div class="showtimes" style="background-color: <?=et_get_option('secondary_nav_bg')?>">
+					<strong>Showtimes for: </strong>
+					<?php
+						if(!empty($meta['showtime_override'][0])) {
+						  $showtime_override = $meta['showtime_override'][0];
+					    $showtime_override = htmlspecialchars_decode($showtime_override);
+					    echo $showtime_override;
+						} else {
+							echo date('F j',$meta['start_date'][0]).' - '.date('F j',$meta['end_date'][0]);
+						}
+					?>
+				</div>
 				<div>
 					<?php
 						if(!empty($meta['showtimes'][0])) {

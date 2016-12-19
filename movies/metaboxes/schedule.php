@@ -29,7 +29,7 @@ function movie_schedule_content($post) {
 	} else {
 		$meta['start_date'][0] = date('M. j, Y',strtotime('next Friday'));
 	}
-	
+
 	// Determine end date
 	if (isset($meta['end_date'][0]) && ($meta['end_date'][0] != '')) {
 		$meta['end_date'][0] = date('M. j, Y',$meta['end_date'][0]);
@@ -43,6 +43,9 @@ function movie_schedule_content($post) {
 	<p>
 		<label>Start Date: <input type="text" name="start_date" value="<?=$meta['start_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday'))?>"/></label>
 		<label>End Date: <input type="text" name="end_date" value="<?=$meta['end_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday +6 days'))?>"/></label>
+	</p>
+	<p>A custom showtime label will change the start and end dates that the public sees, but the listing will still be posted and removed automatically using the start and end dates above.</p>
+	<p><label>Custom Label: <input type="text" name="showtime_override" value="<?=echo_var($meta['showtime_override'][0])?>" size="28" placeholder="e.g. <?=date('F j',strtotime('next Saturday')).' - '.date('F j',strtotime('next Saturday +3 days'))?>"/></label>
 	</p>
 
 	<h3>Special Listing</h3>
@@ -96,6 +99,7 @@ function movie_schedule_meta_save($post_id) {
   }
 	if(isset($_POST['start_date'])) { update_post_meta($post_id, 'start_date', strtotime($_POST['start_date'])); }
 	if(isset($_POST['end_date'])) { update_post_meta($post_id, 'end_date', strtotime($_POST['end_date'])); }
+	if(isset($_POST['showtime_override'])) { update_post_meta($post_id, 'showtime_override', $_POST['showtime_override']); }
 	if(isset($_POST['listing_type'])) { update_post_meta($post_id, 'listing_type', $_POST['listing_type']); }
 	if(isset($_POST['listing_label'])) { update_post_meta($post_id, 'listing_label', $_POST['listing_label']); }
 }
