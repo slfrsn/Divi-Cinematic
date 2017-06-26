@@ -124,77 +124,102 @@ if (!function_exists('movies_post_type')) {
 		);
 	}
 
-	// Add Start Date Column to Movie Listings
-	add_filter('manage_movies_posts_columns', 'start_date_column_header', 10);
-	function start_date_column_header($defaults) {
+	// Add Columns to the Movie Listings Post List
+	add_filter('manage_movies_posts_columns', 'movies_column_headers', 10);
+	function movies_column_headers($defaults) {
+    $defaults['featured_image'] = 'Poster';
+		$defaults['showtimes'] = 'Show Times';
 		$defaults['start_date'] = 'Start Date';
-		return $defaults;
-	}
-
-	// Handle the Start Date Column Data
-	add_action('manage_movies_posts_custom_column', 'start_date_column_content', 10, 2);
-	function start_date_column_content($column_name, $post_ID) {
-		if ($column_name == 'start_date') {
-			$start_date = get_post_meta($post_ID, 'start_date', true);
-			$column_data = ($start_date ? date('M. j, Y',$start_date) : '<span style="color:#ff0000;">No date entered</span>');
-			echo $column_data;
-		}
-	}
-
-	// Add End Date Column to Movie Listings
-	add_filter('manage_movies_posts_columns', 'end_date_column_header', 10);
-	function end_date_column_header($defaults) {
 		$defaults['end_date'] = 'End Date';
-		return $defaults;
-	}
-
-	// Handle the End Date Column Data
-	add_action('manage_movies_posts_custom_column', 'end_date_column_content', 10, 2);
-	function end_date_column_content($column_name, $post_ID) {
-		if ($column_name == 'end_date') {
-			$end_date = get_post_meta($post_ID, 'end_date', true);
-			$column_data = ($end_date && ($end_date != 246767472000) ? date('M. j, Y',$end_date) : '<span style="color:#aaaaaa;">No date entered</span>');
-			echo $column_data;
-		}
-	}
-
-	// Add Status Column to Movie Listings
-	add_filter('manage_movies_posts_columns', 'status_column_header', 10);
-	function status_column_header($defaults) {
 		$defaults['status'] = 'Status';
+		// Columns created specifically for the quick edit box. These are meant to be hidden
+		$defaults['showtime_override'] = 'Showtime Override';
+		$defaults['listing_label'] = 'Special Listing Label';
+		$defaults['listing_type'] = 'Special Listing Type';
+		$defaults['notes'] = 'Notes';
 		return $defaults;
 	}
 
-	// Handle the Status Column Data
-	add_action('manage_movies_posts_custom_column', 'status_column_content', 10, 2);
-	function status_column_content($column_name, $post_ID) {
-		if ($column_name == 'status') {
-			$start_date = get_post_meta($post_ID, 'start_date', true);
-			$start_week = (int)date('W', $start_date);
-			$end_date = get_post_meta($post_ID, 'end_date', true);
-			$listing_type = get_post_meta($post_ID, 'listing_type', true);
-			$current_date = strtotime('today');
-			$current_week = (int)date('W', $current_date);
-
-			$column_data = 'N/A';
-
-			// Status Conditions
-			if (!empty($start_date) && ($current_date >= $start_date) && (($current_date <= $end_date) || (empty($end_date)))) { $column_data = '<strong>Now Playing</strong>'; }
-			if (empty($start_date)) { $column_data = '<span style="color:#dd3d36;">Missing start date</span>';	}
-			if (($current_date < $start_date)) { $column_data = 'Coming Soon';	}
-			if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#dd3d36;">Expired</span>';	}
-			if (get_post_status ($post_ID) != 'publish') { $column_data = '<span style="color:#aaa;">Not published</span>';	}
-			if (get_post_status ($post_ID) == 'future') { $column_data = 'Scheduled';	}
-			if (!empty($listing_type) && ($listing_type == 'popup')) { $column_data = 'Showing as Popup';	}
-			if (!empty($listing_type) && ($listing_type == 'widget')) { $column_data = 'Showing in Widget';	}
-
-			echo $column_data;
-		}
+	// Handle the Column Data
+	add_action('manage_movies_posts_custom_column', 'movies_column_data', 10, 2);
+	function movies_column_data($column_name, $post_ID) {
+		switch ($column_name) {
+	    case 'start_date':
+				$start_date = get_post_meta($post_ID, 'start_date', true);
+				if ($start_date) {
+					echo '<span data-meta="'.date('M. j, Y',$start_date).'">'.date('M. j, Y',$start_date).'</span>';
+				} else {
+					echo '<span data-meta="" style="color:#a00;">No date entered</span>';
+				}
+				break;
+	    case 'end_date':
+				$end_date = get_post_meta($post_ID, 'end_date', true);
+				if ($end_date && ($end_date != 246767472000)) {
+					echo '<span data-meta="'.date('M. j, Y',$end_date).'">'.date('M. j, Y',$end_date).'</span>';
+				} else {
+					echo '<span data-meta="" style="color:#a00;">No date entered</span>';
+				}
+				break;
+			case 'status':
+				$start_date = get_post_meta($post_ID, 'start_date', true);
+				$start_week = (int)date('W', $start_date);
+				$end_date = get_post_meta($post_ID, 'end_date', true);
+				$listing_type = get_post_meta($post_ID, 'listing_type', true);
+				$current_date = strtotime('today');
+				$current_week = (int)date('W', $current_date);
+				$column_data = 'N/A';
+				// Status Conditions
+				if (!empty($start_date) && ($current_date >= $start_date) && (($current_date <= $end_date) || (empty($end_date)))) { $column_data = '<strong>Now Playing</strong>'; }
+				if (empty($start_date)) { $column_data = '<span style="color:#a00;">Missing start date</span>';	}
+				if (($current_date < $start_date)) { $column_data = 'Coming Soon';	}
+				if (!empty($end_date) && ($current_date > $end_date)) { $column_data = '<span style="color:#a00;">Expired</span>';	}
+				if (get_post_status ($post_ID) != 'publish') { $column_data = '<span style="color:#aaa;">Not published</span>';	}
+				if (get_post_status ($post_ID) == 'future') { $column_data = 'Scheduled';	}
+				if (!empty($listing_type) && ($listing_type == 'popup')) { $column_data = 'Showing as Popup';	}
+				if (!empty($listing_type) && ($listing_type == 'widget')) { $column_data = 'Showing in Widget';	}
+				echo $column_data;
+				break;
+			case 'showtimes':
+				$showtimes = get_post_meta($post_ID, 'showtimes', true);
+				if ($showtimes) {
+					echo '<span data-meta="'.$showtimes.'">'.$showtimes.'</span>';
+				} else {
+					echo '<span data-meta="" style="color:#a00;">No date entered</span>';
+				}
+				break;
+			case 'featured_image':
+        echo get_the_post_thumbnail($post_ID, [60,90], '');
+			break;
+			case 'showtime_override':
+				$showtime_override = get_post_meta($post_ID, 'showtime_override', true);
+				if ($showtime_override) {
+					echo '<span data-meta="'.$showtime_override.'">'.$showtime_override.'</span>';
+				}
+				break;
+			case 'listing_label':
+				$listing_label = get_post_meta($post_ID, 'listing_label', true);
+				if ($listing_label) {
+					echo '<span data-meta="'.$listing_label.'">'.$listing_label.'</span>';
+				}
+				break;
+			case 'listing_type':
+				$listing_type = get_post_meta($post_ID, 'listing_type', true);
+				if ($listing_type) {
+					echo '<span data-meta="'.$listing_type.'">'.$listing_type.'</span>';
+				}
+				break;
+			case 'notes':
+				$notes = get_post_meta($post_ID, 'notes', true);
+				if ($notes) {
+					echo '<span data-meta="'.$notes.'">'.$notes.'</span>';
+				}
+				break;
+			}
 	}
 
 	// Register the Date Columns as Sortable
-	add_filter("manage_edit-movies_sortable_columns", 'status_column_sortable');
-	function status_column_sortable($columns) {
+	add_filter("manage_edit-movies_sortable_columns", 'date_column_sortable');
+	function date_column_sortable($columns) {
 		$columns['start_date'] = 'start_date';
 		$columns['end_date'] = 'end_date';
 		return $columns;
@@ -218,6 +243,69 @@ if (!function_exists('movies_post_type')) {
 	  ));
 	  }
 	  return $vars;
+	}
+
+	add_action('quick_edit_custom_box', 'quickedit_posts_custom_box', 10, 2);
+	function quickedit_posts_custom_box( $col, $type ) {
+			if( $col != 'showtimes' || $type != 'movies' ) {
+					return;
+			} ?>
+			<legend class="inline-edit-legend">Active Period</legend>
+			<fieldset class="inline-edit-col-right"><div class="inline-edit-col">
+				<div class="inline-edit-group">
+					<label>
+						<span class="title">Start Date</span>
+						<span class="input-text-wrap"><input type="text" name="start_date" value=""></span>
+					</label>
+					<label>
+						<span class="title">End Date</span>
+						<span class="input-text-wrap"><input type="text" name="end_date" value=""></span>
+					</label>
+					<label>
+						<span class="title">Custom</span>
+						<span class="input-text-wrap"><input type="text" name="showtime_override" value="" placeholder="e.g. <?=date('F j',strtotime('next Saturday')).' - '.date('F j',strtotime('next Saturday +3 days'))?>"></span>
+					</label>
+				</div>
+			</fieldset>
+
+			<legend class="inline-edit-legend">Special Listing</legend>
+			<fieldset class="inline-edit-col-right"><div class="inline-edit-col">
+				<div class="inline-edit-group">
+					<label>
+						<span class="title">Label</span>
+						<span class="input-text-wrap"><input type="text" name="listing_label" value="" placeholder="e.g. Special Showtime"></span>
+					</label>
+					<label>
+						<span class="title">Type</span>
+						<span class="input-text-wrap">
+							<label style="display:inline-block;margin-right:8px;"><input type="radio" name="listing_type" value="none">None</label>
+							<label style="display:inline-block;margin-right:8px;"><input type="radio" name="listing_type" value="popup">Show as Popup</label>
+							<label style="display:inline-block;"><input type="radio" name="listing_type" value="widget">Show in Widget</label>
+						</span>
+					</label>
+				</div>
+			</fieldset>
+
+			<legend class="inline-edit-legend">Showtimes</legend>
+			<fieldset class="inline-edit-col-right"><div class="inline-edit-col">
+				<div class="inline-edit-group">
+					<label>
+						<span class="title">Showtimes</span>
+						<span class="input-text-wrap">
+							<span class=""><strong>Note:</strong> for the sake of simplicity, quick edit will load the HTML view.</span>
+							<textarea name="showtimes"></textarea>
+						</span>
+					</label>
+					<label>
+						<span class="title">Notes</span>
+						<span class="input-text-wrap">
+							<span class=""><strong>Note:</strong> for the sake of simplicity, quick edit will load the HTML view.</span>
+							<textarea name="notes"></textarea>
+						</span>
+					</label>
+				</div>
+			</fieldset>
+			<?php
 	}
 
 	// Remove Tags
@@ -451,14 +539,18 @@ if (!function_exists('movies_post_type')) {
 	  global $post;
 
 		// Make sure to only load the scripts on the movie post pages
-	  if ($hook == 'post-new.php' || $hook == 'post.php') {
-	    if ('movies' === $post->post_type) {
+    if (isset($post) && $post->post_type == 'movies') {
+	  	if ($hook == 'post-new.php' || $hook == 'post.php') {
 				wp_enqueue_style ('movie-lazy-youtube-css', get_stylesheet_directory_uri() . '/assets/css/lazy-youtube.css');
 				wp_enqueue_style ('movie-json-viewer-css', get_stylesheet_directory_uri() . '/assets/css/json-view.css');
 				wp_enqueue_style ('movie-movies-css', get_stylesheet_directory_uri() . '/assets/css/movies.css');
-		    wp_enqueue_script('movie_youtube', get_stylesheet_directory_uri() . '/assets/js/lazy-youtube.js');
-		    wp_enqueue_script('movie_json', get_stylesheet_directory_uri() . '/assets/js/json-view.js');
-		    wp_enqueue_script('movie_movies', get_stylesheet_directory_uri() . '/assets/js/movies.js');
+		    wp_enqueue_script('movie-youtube-js', get_stylesheet_directory_uri() . '/assets/js/lazy-youtube.js');
+		    wp_enqueue_script('movie-json-js', get_stylesheet_directory_uri() . '/assets/js/json-view.js');
+		    wp_enqueue_script('movie-movies-js', get_stylesheet_directory_uri() . '/assets/js/movies.js');
+			}
+	  	if ($hook == 'edit.php') {
+				wp_enqueue_style ('movie-movies-list-css', get_stylesheet_directory_uri() . '/assets/css/movies-list.css');
+	    	wp_enqueue_script('movie-movies-list-js', get_stylesheet_directory_uri() . '/assets/js/movies-list.js');
 			}
 		}
 	}

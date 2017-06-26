@@ -1,0 +1,12 @@
+/* Hide the columns we are only using for the quick edit box */
+.column-showtime_override,
+.column-listing_label,
+.column-listing_type,
+.column-notes {
+  display: none !important;
+}
+
+.column-featured_image {
+  width:90px !important;
+  overflow:hidden;
+}
