@@ -43,7 +43,6 @@ jQuery(document).ready(function($){
 		} else {
 			$(this).addClass('disabled').attr('title','Error copying to clipboard');
 			$(this).find('span').removeClass('dashicons-admin-links').addClass('dashicons-warning');
-			input.css('opacity',1);
 		}
 	});
 });

@@ -11,6 +11,12 @@
   overflow:hidden;
 }
 
+.column-featured_image a img {
+  height: 80px;
+  display: table-cell;
+  width: auto;
+}
+
 .column-trailer {
   width:120px !important;
 }
@@ -25,12 +31,11 @@
 
 .column-trailer input {
   width: 100%;
-  opacity: 0;
   display: block;
   border: none;
   background: none;
   text-overflow: ellipsis;
   color: #555;
-  font-size: 12px;
+  font-size: 13px;
   outline: none;
 }

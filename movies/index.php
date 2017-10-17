@@ -190,7 +190,7 @@ if (!function_exists('movies_post_type')) {
 				break;
 			case 'featured_image':
 				$poster_url = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID),'full');
-        echo '<a href="'.$poster_url[0].'" target="_blank" title="Open movie poster">'.get_the_post_thumbnail($post_ID, [70,70], '').'</a>';
+        echo '<a href="'.$poster_url[0].'" target="_blank" title="Open movie poster">'.get_the_post_thumbnail($post_ID, [80,80], '').'</a>';
 			break;
 			case 'trailer':
 				$trailer = get_post_meta($post_ID, 'trailer', true);
