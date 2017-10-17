@@ -128,6 +128,7 @@ if (!function_exists('movies_post_type')) {
 	add_filter('manage_movies_posts_columns', 'movies_column_headers', 10);
 	function movies_column_headers($defaults) {
     $defaults['featured_image'] = 'Poster';
+		$defaults['trailer'] = 'Trailer';
 		$defaults['showtimes'] = 'Show Times';
 		$defaults['start_date'] = 'Start Date';
 		$defaults['end_date'] = 'End Date';
@@ -184,12 +185,22 @@ if (!function_exists('movies_post_type')) {
 				if ($showtimes) {
 					echo '<span data-meta="'.$showtimes.'">'.$showtimes.'</span>';
 				} else {
-					echo '<span data-meta="" style="color:#a00;">No date entered</span>';
+					echo '<span data-meta="" style="color:#a00;">No data entered</span>';
 				}
 				break;
 			case 'featured_image':
-        echo get_the_post_thumbnail($post_ID, [60,90], '');
+				$poster_url = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID),'full');
+        echo '<a href="'.$poster_url[0].'" target="_blank" title="Open movie poster">'.get_the_post_thumbnail($post_ID, [70,70], '').'</a>';
 			break;
+			case 'trailer':
+				$trailer = get_post_meta($post_ID, 'trailer', true);
+				if ($trailer) {
+					echo '<a href="'.$trailer.'" target="_blank" class="button" title="Open in YouTube"><span class="dashicons dashicons-video-alt3"></span></a>';
+					echo '<span class="button copy_to_clipboard" title="Copy to clipboard"><span class="dashicons dashicons-admin-links"></span></span><input value="'.$trailer.'"></input>';
+				} else {
+					echo '<span data-meta="" style="color:#a00;">No trailer entered</span>';
+				}
+				break;
 			case 'showtime_override':
 				$showtime_override = get_post_meta($post_ID, 'showtime_override', true);
 				if ($showtime_override) {

@@ -10,3 +10,27 @@
   width:90px !important;
   overflow:hidden;
 }
+
+.column-trailer {
+  width:120px !important;
+}
+
+.column-trailer .button {
+  margin: 0 4px 4px 0;
+}
+
+.column-trailer .button span {
+  vertical-align: -5px;
+}
+
+.column-trailer input {
+  width: 100%;
+  opacity: 0;
+  display: block;
+  border: none;
+  background: none;
+  text-overflow: ellipsis;
+  color: #555;
+  font-size: 12px;
+  outline: none;
+}
