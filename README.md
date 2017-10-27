@@ -1,10 +1,13 @@
 # Divi Cinematic
 
-[![Build Status](https://travis-ci.org/slfrsn/Divi-Cinematic.png)](https://travis-ci.org/slfrsn/Divi-Cinematic)
+#### Update: October 27, 2017
+This project will no longer receive public updates. We have moved it to a private repository because the scope of the project has become too focused to remain public. If you have any questions or need assistance with the theme in its current state, please don't hesitate to open an issue on this repository and I'll be happy to help you out.
+
+<hr>
 
 A WordPress child theme based on [Divi][1]. Commissioned for a local Canadian theatre. It has a robust movie listing post type that automatically retrieves movie details, poster, etc.
 
-Features:
+#### Features:
 - Automatic movie detail propagation in Movie editor
   - Enter the movie title, click **Fetch Movie Details** and that's it
     - Runtime, cast, synopsis, YouTube trailer and official website are all fetched
