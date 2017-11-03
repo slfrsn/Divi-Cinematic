@@ -39,3 +39,17 @@
   font-size: 13px;
   outline: none;
 }
+
+.email_output_links {
+  padding: 20px 0 0 0 !important;
+  display: block;
+}
+
+.email_output_html {
+  width: 0px;
+  height: 0px;
+  opacity: 0;
+  padding: 0;
+  float: left;
+  margin-bottom: 15px;
+}

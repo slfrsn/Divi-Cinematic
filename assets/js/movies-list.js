@@ -1,13 +1,13 @@
 jQuery(document).ready(function($){
 	$('a.editinline').live('click', function() {
-		var id = inlineEditPost.getId(this);
-		var start_date = $('#post-' + id + ' > .column-start_date > span').data('meta');
-		var end_date = $('#post-' + id + ' > .column-end_date > span').data('meta');
-		var showtime_override = $('#post-' + id + ' > .column-showtime_override > span').data('meta');
-		var listing_label = $('#post-' + id + ' > .column-listing_label > span').data('meta');
-		var listing_type = $('#post-' + id + ' > .column-listing_type > span').data('meta');
-		var showtimes = $('#post-' + id + ' > .column-showtimes > span').data('meta');
-		var notes = $('#post-' + id + ' > .column-notes > span').data('meta');
+		var id = inlineEditPost.getId(this),
+				start_date = $('#post-' + id + ' > .column-start_date > span').data('meta'),
+				end_date = $('#post-' + id + ' > .column-end_date > span').data('meta'),
+				showtime_override = $('#post-' + id + ' > .column-showtime_override > span').data('meta'),
+				listing_label = $('#post-' + id + ' > .column-listing_label > span').data('meta'),
+				listing_type = $('#post-' + id + ' > .column-listing_type > span').data('meta'),
+				showtimes = $('#post-' + id + ' > .column-showtimes > span').data('meta'),
+				notes = $('#post-' + id + ' > .column-notes > span').data('meta');
 		$('input[name=start_date]').val(start_date);
 		$('input[name=end_date]').val(end_date);
 		$('input[name=showtime_override]').val(showtime_override);

@@ -9,6 +9,11 @@ jQuery(document).ready(function($){
 				enabled: true,
 			}
 		});
+		// Open a movie popup if a hash is included in the URL
+		if(window.location.hash && $(window.location.hash).length) {
+			var movie_index = $('.white_popup').index($(window.location.hash));
+			$details.magnificPopup('open', movie_index);
+		}
 	}
 
 	// Load the popups gallery if it exists

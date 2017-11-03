@@ -124,6 +124,62 @@ if (!function_exists('movies_post_type')) {
 		);
 	}
 
+	// =============================
+	// QUERY ARGUMENTS
+	// =============================
+
+	function movies_query_args($status) {
+		if ($status == 'nowplaying') {
+			return array (
+				'post_type'		  => 'movies',
+				'meta_query'    => array(
+					array(
+						'key'   	  => 'start_date',
+						'value' 	  => strtotime('today'),
+						'type' 		  => 'NUMERIC',
+						'compare'   => '<='
+					),
+					array(
+						'key'     => 'end_date',
+						'value'   => strtotime('today'),
+						'type' 		=> 'NUMERIC',
+						'compare' => '>='
+					),
+		      array(
+				    'key' 		=> 'listing_type',
+						'value'		=> array('popup','widget'),
+						'compare' => 'NOT IN'
+			    )
+				)
+			);
+
+		// Coming Soon
+	} elseif ($status == 'comingsoon') {
+			return array (
+				'post_type'		=> 'movies',
+				'meta_query'  => array(
+					array(
+						'key'   	=> 'start_date',
+						'value' 	=> strtotime('now'),
+						'type' 		=> 'NUMERIC',
+						'compare' => '>'
+					),
+					array(
+						'key'   	=> 'start_date',
+						'value' 	=> strtotime('-1 week'),
+						'type' 		=> 'NUMERIC',
+						'compare' => '>'
+					),
+		      array(
+				    'key' 		=> 'listing_type',
+						'value'		=> array('popup','widget'),
+						'compare' => 'NOT IN'
+			    )
+				)
+			);
+		}
+	}
+
 	// Add Columns to the Movie Listings Post List
 	add_filter('manage_movies_posts_columns', 'movies_column_headers', 10);
 	function movies_column_headers($defaults) {
@@ -190,12 +246,13 @@ if (!function_exists('movies_post_type')) {
 				break;
 			case 'featured_image':
 				$poster_url = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID),'full');
-        echo '<a href="'.$poster_url[0].'" target="_blank" title="Open movie poster">'.get_the_post_thumbnail($post_ID, [80,80], '').'</a>';
+        echo '<a href="'.$poster_url[0].'?TB_iframe=true&width=600&height=900" class="thickbox" title="Poster for '.get_the_title().'">'.get_the_post_thumbnail($post_ID, 'small-square', '').'</a>';
 			break;
 			case 'trailer':
 				$trailer = get_post_meta($post_ID, 'trailer', true);
-				if ($trailer) {
-					echo '<a href="'.$trailer.'" target="_blank" class="button" title="Open in YouTube"><span class="dashicons dashicons-video-alt3"></span></a>';
+				if ($trailer) { ?>
+					<a href="<?=preg_replace("/\s*[a-zA-Z\/\/:\.]*youtube.com\/watch\?v=([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i","//www.youtube.com/embed/$1",$trailer)?>?rel=0&amp;autohide=2&amp;iv_load_policy=3&amp;modestbranding=1&amp;color=white&amp;TB_iframe=true&width=800&height=450" class="thickbox button" title="Trailer for <?=get_the_title()?>"><span class="dashicons dashicons-video-alt3"></span></a>
+					<?php
 					echo '<span class="button copy_to_clipboard" title="Copy to clipboard"><span class="dashicons dashicons-admin-links"></span></span><input value="'.$trailer.'"></input>';
 				} else {
 					echo '<span data-meta="" style="color:#a00;">No trailer entered</span>';
@@ -244,14 +301,14 @@ if (!function_exists('movies_post_type')) {
 	    $vars = array_merge($vars, array(
 	      'meta_key' => 'start_date',
 	      'orderby' => 'meta_value_num'
-	  ));
+	  	));
 	  }
 		// Sort by End Date
 	  if (isset($vars['orderby']) && 'end_date' == $vars['orderby']) {
 	    $vars = array_merge($vars, array(
 	      'meta_key' => 'end_date',
 	      'orderby' => 'meta_value_num'
-	  ));
+	  	));
 	  }
 	  return $vars;
 	}
@@ -344,7 +401,6 @@ if (!function_exists('movies_post_type')) {
     return $content;
 	}
 
-	// Include the special listing widget
 	require_once('widget.php');
 
 	// =============================
@@ -368,6 +424,14 @@ if (!function_exists('movies_post_type')) {
 			'movies',
 			'normal',
 			'core'
+		);
+		add_meta_box(
+			'movie_fetch_details',
+			'Fetch Movie Details',
+			'movie_fetch_details_content',
+			'movies',
+			'side',
+			'high'
 		);
 		add_meta_box(
 			'movie_details',
@@ -399,35 +463,13 @@ if (!function_exists('movies_post_type')) {
 	require_once('metaboxes/schedule.php');
 	require_once('metaboxes/details.php');
 	require_once('metaboxes/links.php');
+	require_once('metaboxes/fetch.php');
 	require_once('metaboxes/response.php');
 	require_once('metaboxes/tutorials.php');
 
 	// =============================
 	// FETCH MOVIE DETAILS
 	// =============================
-
-	// Add our 'Load Movie Details' button to the Publish box
-	add_action('post_submitbox_misc_actions', 'custom_button');
-	function custom_button() {
-	  global $post_type;
-		global $post_id;
-		$meta = get_post_meta($post_id);
-
-		$api_url = get_stylesheet_directory_uri().'/movies/api.php?status';
-	  if($post_type == 'movies' && empty($meta['json_response'])) {
-			echo '
-				<div id="major-publishing-actions" style="overflow:hidden">
-					<div id="publishing-action" class="fetch-details" style="width:100%">
-						<span style="float:left;position:relative;top:3px">
-							<span id="api_spinner" class="spinner"></span>
-							<span id="api_status">Checking...</span>
-						</span>
-						<a class="button-primary" id="load_movie" data-url="'.$api_url.'">Fetch Movie Details</a>
-					</div>
-				</div>
-			';
-		}
-	}
 
 	// Look up rating description
 	function rating_description($rating) {
@@ -540,6 +582,10 @@ if (!function_exists('movies_post_type')) {
 		}
 	}
 
+	add_image_size('summary-thumbnail', 66, 100, false);
+	add_image_size('small-square', 80, 80, true);
+	add_image_size('email-thumbnail', 150, 225, true);
+
 	// =============================
 	// SCRIPTS AND STYLESHEETS
 	// =============================
@@ -562,6 +608,7 @@ if (!function_exists('movies_post_type')) {
 	  	if ($hook == 'edit.php') {
 				wp_enqueue_style ('movie-movies-list-css', get_stylesheet_directory_uri() . '/assets/css/movies-list.css');
 	    	wp_enqueue_script('movie-movies-list-js', get_stylesheet_directory_uri() . '/assets/js/movies-list.js');
+				add_thickbox();
 			}
 		}
 	}

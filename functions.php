@@ -1,5 +1,8 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Set a global timezone for use in our code
 date_default_timezone_set('America/Vancouver');
 
@@ -60,10 +63,44 @@ function convert_to_string($array, $delimiter) {
 	return $string;
 }
 
+add_action('customize_register', 'divi_cinematic_customizer');
+function divi_cinematic_customizer($wp_customize) {
+  $wp_customize->add_panel('divi_cinematic_options', array(
+    'priority' => 1,
+    'capability' => 'edit_theme_options',
+    'title' => 'Divi Cinematic',
+    'description' => 'Customize movie listing settings',
+  ));
+
+  $wp_customize->add_section('movie_listing_section', array(
+    'title' => 'Movie Listing Settings',
+    'panel' => 'divi_cinematic_options',
+  ));
+
+  $wp_customize->add_setting('movie_changeover_day', array(
+   'default' => 'Friday',
+  ));
+
+  $wp_customize->add_control('movie_changeover_day', array(
+    'type' => 'select',
+    'label' => 'Movies change over on...',
+    'section' => 'movie_listing_section',
+    'choices' => array(
+        'Sunday' => 'Sunday',
+        'Monday' => 'Monday',
+        'Tuesday' => 'Tuesday',
+        'Wednesday' => 'Wednesday',
+        'Thursday' => 'Thursday',
+        'Friday' => 'Friday',
+        'Saturday' => 'Saturday'
+      ),
+  ));
+}
+
 // Our theme needs it's own textdomain for translation
 add_action('after_setup_theme', 'divi_cinematic_setup');
 function divi_cinematic_setup(){
-	load_child_theme_textdomain( 'divi-cinematic', get_stylesheet_directory_uri() . '/languages' );
+	load_child_theme_textdomain('divi-cinematic', get_stylesheet_directory_uri() . '/languages');
 }
 
 // Automatic theme updates from the GitHub repository
@@ -104,7 +141,7 @@ function tutorial_scripts($hook) {
 	if($hook != 'newsletter_page_newsletter_emails_index' && $hook != 'admin_page_newsletter_emails_edit' && $hook != 'post.php' && $hook != 'post-new.php' && $hook != 'edit.php') {
 		return;
   }
-	wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
+  wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
 	wp_enqueue_style ( 'tutorial-intro-theme-css', get_stylesheet_directory_uri() . '/assets/css/intro-theme.css' );
   wp_enqueue_script( 'tutorial_intro', get_stylesheet_directory_uri() . '/assets/js/intro.js' );
   wp_enqueue_script( 'tutorial_tutorials', get_stylesheet_directory_uri() . '/assets/js/tutorials.js' );

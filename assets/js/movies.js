@@ -12,7 +12,7 @@ jQuery(document).ready(function($){
 			$('.status-light').css('background-color',colour);
 		}
 		if (is_link) {
-			$('#api_status').replaceWith('<a id="api_status" href="https://www.themoviedb.org/search?query=' + encodeURIComponent($('#title').val()) + '" target="_blank" title="Search TMDB\'s website">' + text +'</a>');
+			$('#api_status').replaceWith('<a id="api_status" href="https://www.themoviedb.org/search?query=' + encodeURIComponent($('#movie_search').val()) + '" target="_blank" title="Search TMDB\'s website">' + text +'</a>');
 		} else {
 			$('#api_status').replaceWith('<span id="api_status" title="' + description + '">' + text +'</span>');
 		}
@@ -95,7 +95,7 @@ jQuery(document).ready(function($){
 			var dataMovie = {
 		    action: 'movie_suggestions',
 		    id: $('#post_id').val(),
-	      title: $('#title').val()
+	      title: $('#movie_search').val()
 			};
 			$.post(ajaxurl, dataMovie, function(response) {
 				var json = validate_response(response);

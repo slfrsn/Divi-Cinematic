@@ -11,82 +11,7 @@ $is_page_builder_used = et_pb_is_pagebuilder_used(get_the_ID());
 
 global $post;
 $meta = get_post_meta(get_the_ID());
-
-// Now Playing
-if ($meta['status'][0] == 'nowplaying') {
-	$movies_args = array (
-		'post_type'		  => 'movies',
-		'meta_query'    => array(
-			array(
-				'key'   	  => 'start_date',
-				'value' 	  => strtotime('today'),
-				'type' 		  => 'NUMERIC',
-				'compare'   => '<='
-			),
-			array(
-				'key'     => 'end_date',
-				'value'   => strtotime('today'),
-				'type' 		=> 'NUMERIC',
-				'compare' => '>='
-			),
-      array(
-		    'key' 		=> 'listing_type',
-				'value'		=> array('popup','widget'),
-				'compare' => 'NOT IN'
-	    )
-		)
-	);
-
-// Coming Soon
-} elseif ($meta['status'][0] == 'comingsoon' ) {
-	$movies_args = array (
-		'post_type'		=> 'movies',
-		'meta_query'  => array(
-			array(
-				'key'   	=> 'start_date',
-				'value' 	=> strtotime('now'),
-				'type' 		=> 'NUMERIC',
-				'compare' => '>'
-			),
-			array(
-				'key'   	=> 'start_date',
-				'value' 	=> strtotime('-1 week'),
-				'type' 		=> 'NUMERIC',
-				'compare' => '>'
-			),
-      array(
-		    'key' 		=> 'listing_type',
-				'value'		=> array('popup','widget'),
-				'compare' => 'NOT IN'
-	    )
-		)
-	);
-}
-
-// Movies designated as site pop-ups
-$popups_args = array (
-	'post_type'		  => 'movies',
-	'meta_query'    => array(
-		array(
-			'key'   	  => 'start_date',
-			'value' 	  => strtotime('today'),
-			'type' 		  => 'NUMERIC',
-			'compare'   => '<='
-		),
-		array(
-			'key'       => 'end_date',
-			'value'     => strtotime('today'),
-			'type' 		  => 'NUMERIC',
-			'compare'   => '>='
-		),
-    array(
-	    'key' 		  => 'listing_type',
-			'value'		  => 'popup',
-			'compare'   => 'LIKE'
-    )
-	)
-);
-
+$movies_args = movies_query_args($meta['status'][0]);
 $movies_query = new WP_Query($movies_args); ?>
 
 <div id="main-content" style="background-color: <?=et_get_option('secondary_nav_bg')?>">
@@ -104,6 +29,10 @@ $movies_query = new WP_Query($movies_args); ?>
 				if ($movies_query->have_posts()) :
 					while($movies_query->have_posts()) : $movies_query->the_post();
 					++$counter;
+
+					$title_id = preg_replace("/[^0-9a-zA-Z ]/m", "", get_the_title($post));
+					$title_id = preg_replace("/ /", "-", $title_id);
+					$title_id = strtolower($title_id);
 
 					// Check if the number of movies is even or odd and calculate position adjustments.
 					if ($count % 2 == 0) {
@@ -173,9 +102,9 @@ $movies_query = new WP_Query($movies_args); ?>
 
 					?>
 
-					<!-- Poster for <?php the_title(); ?> (post-<?php the_ID(); ?>) -->
-					<li id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?> poster count-<?=$count?>" style="<?=$css?>">
-						<a href="#post-<?php the_ID(); ?>-details" class="details_popup">
+					<!-- Poster for <?php the_title(); ?> (<?=$title_id?>) -->
+					<li id="<?=$title_id?>-link" class="post-<?php the_ID(); ?> poster count-<?=$count?>" style="<?=$css?>">
+						<a href="#<?=$title_id?>" class="details_popup">
 							<?=get_the_post_thumbnail($post->ID, 'large', array('class' => ''))?>
 						</a>
 						<?php

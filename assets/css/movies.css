@@ -67,6 +67,21 @@
   margin-top: 20px;
   display: none;
 }
+#movie_fetch_details .inside {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+#movie_fetch_details #movie_details_saved {
+  padding: 12px;
+  display: block;
+}
+#movie_fetch_details .inside #movie_search {
+  width: 100%;
+  border: none;
+  box-shadow: none;
+  margin: 0;
+  padding: 12px;
+}
 #rating-confirm {
 	vertical-align: middle;
 	margin-left: 10px;

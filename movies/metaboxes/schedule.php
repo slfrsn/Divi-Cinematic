@@ -27,22 +27,22 @@ function movie_schedule_content($post) {
 	if (isset($meta['start_date'][0]) && ($meta['start_date'][0] != '')) {
 		$meta['start_date'][0] = date('M. j, Y',$meta['start_date'][0]);
 	} else {
-		$meta['start_date'][0] = date('M. j, Y',strtotime('next Friday'));
+		$meta['start_date'][0] = date('M. j, Y',strtotime('next '.get_theme_mod('movie_changeover_day', 'Friday')));
 	}
 
 	// Determine end date
 	if (isset($meta['end_date'][0]) && ($meta['end_date'][0] != '')) {
 		$meta['end_date'][0] = date('M. j, Y',$meta['end_date'][0]);
 	} else {
-		$meta['end_date'][0] = date('M. j, Y',strtotime('next Friday +6 days'));
+		$meta['end_date'][0] = date('M. j, Y',strtotime('next '.get_theme_mod('movie_changeover_day', 'Friday').' +6 days'));
 	}
 ?>
 
 	<h3>Active Period</h3>
 	<p>Please enter the first and last date this movie will show on. You can use any date format you want, just remember to include the day, month and year.</p>
 	<p>
-		<label>Start Date: <input type="text" name="start_date" value="<?=$meta['start_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday'))?>"/></label>
-		<label>End Date: <input type="text" name="end_date" value="<?=$meta['end_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next Friday +6 days'))?>"/></label>
+		<label>Start Date: <input type="text" name="start_date" value="<?=$meta['start_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next '.get_theme_mod('movie_changeover_day', 'Friday').''))?>"/></label>
+		<label>End Date: <input type="text" name="end_date" value="<?=$meta['end_date'][0]?>" placeholder="e.g. <?=date('M. j, Y',strtotime('next '.get_theme_mod('movie_changeover_day', 'Friday').' +6 days'))?>"/></label>
 	</p>
 	<p>A custom showtime label will change the start and end dates that the public sees, but the listing will still be posted and removed automatically using the start and end dates above.</p>
 	<p><label>Custom Label: <input type="text" name="showtime_override" value="<?=echo_var($meta['showtime_override'][0])?>" size="28" placeholder="e.g. <?=date('F j',strtotime('next Saturday')).' - '.date('F j',strtotime('next Saturday +3 days'))?>"/></label>

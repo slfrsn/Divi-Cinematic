@@ -3,7 +3,7 @@ Theme Name:       Divi Cinematic
 Description:      A modified version of Divi commissioned for a Canadian theatre. Has a robust movie listing post type that automatically retrieves movie details, poster, etc.
 Author:           slfrsn
 Author URI:       https://github.com/slfrsn
-Theme URI:        https://github.com/slfrsn/Divi-Cinematic
+Theme URI:        https://github.com/slfrsn/Divi-Cinematic/
 Template:         divi
 Version:          1.6.1
 
@@ -37,9 +37,6 @@ CSS Structure
   /* - PAGE STRUCTURE */
   /*==================*/
 
-  #main-content {
-    min-height: 300px; /* Prevent an ugly 'collapsed' view when there's little or no content */
-  }
   .single-movies #content-area {
     padding-bottom: 50px; /* No padding otherwise */
   }

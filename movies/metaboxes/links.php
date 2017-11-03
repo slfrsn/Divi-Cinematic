@@ -22,7 +22,7 @@ function movie_links_content($post) {
 		Yes, this is the correct trailer for this movie.
 	</label>
 
-	<?php if (!empty($trailer) && $trailer != ' ') { // If a trailer URL exists, show the trailer preview box
+	<?php if (!empty($trailer) && $trailer != ' ') {
 		// Grab the YouTube ID from the trailer URL
 		$trailer = parse_url($trailer);
 		parse_str($trailer['query'], $query);
@@ -34,7 +34,7 @@ function movie_links_content($post) {
 				<div class="handlediv" title="Click to toggle"><br /></div>
 				<h3 class='hndle'><span>View Trailer</span></h3>
 				<div class="inside">
-	        <div class="js-lazyYT" id="trailer-frame" data-youtube-id="<?=$trailer?>" data-ratio="16:9"  data-parameters="rel=0&autohide=2&iv_load_policy=3&modestbranding=1&color=white"></div>
+	        <div class="js-lazyYT" id="trailer-frame" data-youtube-id="<?=$trailer?>" data-ratio="16:9" data-parameters="rel=0&autohide=2&iv_load_policy=3&modestbranding=1&color=white"></div>
 				</div>
 			</div>
 		</div>
@@ -49,11 +49,11 @@ function movie_links_content($post) {
 	<p><input type="url" name="website" placeholder="Official website..." value="<?=$website?>" /></p>
 
 	<label>
-		<input type="checkbox" name="website_confirm" value="yes"  <?=echo_checkbox($meta['website_confirm'][0],'yes')?>>
+		<input type="checkbox" name="website_confirm" value="yes" <?=echo_checkbox($meta['website_confirm'][0],'yes')?>>
 		Yes, this is the correct website for this movie.
 	</label>
 
-	<?php if (!empty($website)) { // If a website URL exists, show the website preview box ?>
+	<?php if (!empty($website)) { ?>
 	<div id="website-postbox" class="postbox-container">
 		<div class="meta-box-sortables">
 			<div class="postbox closed">
