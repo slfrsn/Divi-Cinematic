@@ -3,7 +3,7 @@
 <table class="form-table">
   <tr>
     <th>Header Image URL</th>
-    <td><?php $controls->text_url('theme_header_image', 43); ?></td>
+    <td><?php $controls->text_url('theme_header_image', 30); ?></td>
   </tr>
   <tr>
     <th>Background Colour</th>
@@ -33,7 +33,11 @@
     <tr>
       <th>Movies</th>
       <td>
-        <?php $controls->checkbox('theme_include_movies', 'Show movie listings'); ?>
+        <?php $controls->checkbox('theme_include_movies', 'Show movie listings'); ?><br>
+        <div style="margin-left: 23px">
+          <?php $controls->checkbox('theme_include_popups', 'Include popup listings'); ?><br>
+          <?php $controls->checkbox('theme_include_widget', 'Include widget listings'); ?>
+        </div>
       </td>
     </tr>
     <tr>
@@ -53,19 +57,19 @@
   </tr>
   <tr>
     <th>Website Link Title</th>
-    <td><?php $controls->text('theme_website_title', 43); ?></td>
+    <td><?php $controls->text('theme_website_title', 30); ?></td>
   </tr>
   <tr>
     <th>Website Link URL</th>
-    <td><?php $controls->text_url('theme_website_url', 43); ?></td>
+    <td><?php $controls->text_url('theme_website_url', 30); ?></td>
   </tr>
   <tr>
     <th>Facebook Link Title</th>
-    <td><?php $controls->text('theme_facebook_title', 43); ?></td>
+    <td><?php $controls->text('theme_facebook_title', 30); ?></td>
   </tr>
   <tr>
     <th>Facebook Link URL</th>
-    <td><?php $controls->text_url('theme_facebook_url', 43); ?></td>
+    <td><?php $controls->text_url('theme_facebook_url', 30); ?></td>
   </tr>
 </table>
 
@@ -73,10 +77,10 @@
 <table class="form-table">
   <tr>
     <th>Company Name</th>
-    <td><?php $controls->text('theme_footer_name', 43); ?></td>
+    <td><?php $controls->text('theme_footer_name', 30); ?></td>
   </tr>
   <tr>
     <th>Company Address</th>
-    <td><?php $controls->text('theme_footer_address', 43); ?></td>
+    <td><?php $controls->text('theme_footer_address', 30); ?></td>
   </tr>
 </table>

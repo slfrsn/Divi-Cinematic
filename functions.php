@@ -95,6 +95,93 @@ function divi_cinematic_customizer($wp_customize) {
         'Saturday' => 'Saturday'
       ),
   ));
+
+  $wp_customize->add_section('divi_cinematic_social_preview', array(
+    'title' => 'Social Media Appearance',
+    'panel' => 'divi_cinematic_options',
+  ));
+
+  $wp_customize->add_setting('divi_cinematic_social_description', array(
+   'description' => 'Friday',
+  ));
+
+  $wp_customize->add_control('divi_cinematic_social_description', array(
+    'type' => 'text',
+    'label' => 'Website description',
+    'section' => 'divi_cinematic_social_preview',
+  ));
+
+  $wp_customize->add_setting('divi_cinematic_social_image');
+  $wp_customize->add_control(new WP_Customize_Image_Control($wp_customize,'divi_cinematic_social_image',array(
+   'label'      => 'Website Image',
+   'section'    => 'divi_cinematic_social_preview',
+   'settings'   => 'divi_cinematic_social_image',
+   )));
+
+}
+
+/* Overwrite Divi's meta function */
+function elegant_description() {
+	global $post;
+
+  $page_object = get_queried_object();
+  $page_id = get_queried_object_id();
+  $page_meta = get_post_meta($page_id);
+
+  $site_name = get_bloginfo('name');
+  $title = $site_name;
+  $description = esc_attr(get_theme_mod('divi_cinematic_social_description', ''));
+  $url = get_permalink($page_object, false);
+  $type = 'website';
+  $image = get_theme_mod('divi_cinematic_social_image', '');
+
+  if (!empty($page_meta['page_type']) && $page_meta['page_type'][0] == 'comingsoon') {
+    $movies_args = movies_query_args('comingsoon');
+    $status = 'Coming Soon';
+  } else {
+    $movies_args = movies_query_args('nowplaying');
+    $status = 'Now Playing';
+  }
+
+  // Movie Listing Summaries
+	if (is_page_template('page-movies.php') && !isset($_GET['movie'])) {
+    $movies_query = new WP_Query($movies_args);
+    $counter = 0;
+		$count = $movies_query->post_count;
+  	if ($movies_query->have_posts()):
+      $description = $status.': ';
+      $count = $movies_query->post_count;
+      $counter = 0;
+			while($movies_query->have_posts()) : $movies_query->the_post();
+				++$counter;
+        $description .= $post->post_title;
+        $description .= ($counter < $count ? ', ' : '');
+      endwhile;
+    endif;
+	}
+
+  // Single Movies
+  if (is_page_template('page-movies.php') && isset($_GET['movie'])) {
+    $movie = get_page_by_path($_GET['movie'], OBJECT, 'movies' );
+    $movie_meta = get_post_meta($movie->ID);
+    $title = $movie->post_title.' ('.$status.' at '.get_bloginfo('name').')';
+    $type = 'article';
+    $image = wp_get_attachment_image_src(get_post_thumbnail_id($movie->ID), 'single-post-thumbnail');
+    $image = $image[0];
+    if (!empty($movie_meta['showtimes'][0])) {
+      $description = 'Showtimes: '.$movie_meta['showtimes'][0].' / Click here for trailer and more information!';
+      $description = str_replace('<br />', ' / ', $description);
+      $description = strip_tags($description);
+    }
+    $url = $url.'?movie='.$movie->post_name;
+	}
+
+  echo '<meta property="og:site_name" content="'.$site_name.'">';
+	echo '<meta property="og:title" content="'.$title.'">';
+	echo '<meta property="og:description" content="'.esc_attr($description).'">';
+	echo '<meta property="og:url" content="'.$url.'">';
+	echo '<meta property="og:type" content="'.$type.'">';
+	echo '<meta property="og:image" content="'.$image.'" />';
 }
 
 // Our theme needs it's own textdomain for translation
@@ -134,17 +221,24 @@ function automatic_GitHub_updates($data) {
   return $data;
 }
 
+//Dequeue JavaScripts
+// function project_dequeue_unnecessary_scripts() {
+// if (is_page_template('page-movies.php')) {
+//   wp_dequeue_script( 'et_pb_admin_js' );
+//   wp_deregister_script( 'et_pb_admin_js' );
+//     }
+// }
+// add_action('wp_print_scripts', 'project_dequeue_unnecessary_scripts');
+
 // Enqueue the scripts and stylesheets for our interactive tutorials
-add_action( 'admin_enqueue_scripts', 'tutorial_scripts', 10, 1);
+add_action('admin_enqueue_scripts', 'tutorial_scripts', 10, 1);
 function tutorial_scripts($hook) {
-	// Return if the hook doesn't need the scripts and stylesheets
-	if($hook != 'newsletter_page_newsletter_emails_index' && $hook != 'admin_page_newsletter_emails_edit' && $hook != 'post.php' && $hook != 'post-new.php' && $hook != 'edit.php') {
-		return;
+  if($hook === 'edit.php') {
+    wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
+  	wp_enqueue_style ( 'tutorial-intro-theme-css', get_stylesheet_directory_uri() . '/assets/css/intro-theme.css' );
+    wp_enqueue_script( 'tutorial_intro', get_stylesheet_directory_uri() . '/assets/js/intro.js' );
+    wp_enqueue_script( 'tutorial_tutorials', get_stylesheet_directory_uri() . '/assets/js/tutorials.js' );
   }
-  wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
-	wp_enqueue_style ( 'tutorial-intro-theme-css', get_stylesheet_directory_uri() . '/assets/css/intro-theme.css' );
-  wp_enqueue_script( 'tutorial_intro', get_stylesheet_directory_uri() . '/assets/js/intro.js' );
-  wp_enqueue_script( 'tutorial_tutorials', get_stylesheet_directory_uri() . '/assets/js/tutorials.js' );
 }
 
 // Replace the footer copyright text

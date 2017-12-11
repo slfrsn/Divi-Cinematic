@@ -7,12 +7,14 @@
         <?=get_the_post_thumbnail($post->ID, array(150,225))?>
       </td>
       <td class="listingContent" align="left" valign="top">
-          <p style="margin-top: 0;"><strong><?php the_title(); ?> (<?=$meta['rating'][0]?>)</strong>
-          <?php
-   				if(count($meta['advisories']) > 0):
-   					echo '<br><em>'.convert_to_string($meta['advisories'], ', ').'</em>';
-   				endif;
-          echo '</p>';
+          <p style="margin-top: 0;">
+						<strong>
+							<?php the_title(); ?>
+		          <?=(!empty($meta['rating']) ? '('.$meta['rating'][0].')' : '')?>
+						</strong>
+						<?=(count($meta['advisories']) > 0 ? '<br><em>'.convert_to_string($meta['advisories'], ', ').'</em>' : '')?>
+          </p>
+					<?php
           if(!empty($meta['showtimes'][0])):
             echo '<p><span>';
    					$showtimes = $meta['showtimes'][0];
@@ -34,7 +36,7 @@
           	<tbody>
           		<tr>
           			<td align="center" valign="middle" class="button">
-                  <a href="<?=$comingsoon_url.'/#'.$title_id?>" style="color:<?=$accent_text_colour?>;" title="Watch Trailer">Watch Trailer</a>
+                  <a href="<?=$comingsoon_url.'/#'.$post->post_name?>" style="color:<?=$accent_text_colour?>;" title="Watch Trailer">Watch Trailer</a>
                 </td>
           		</tr>
           	</tbody>

@@ -1,5 +1,5 @@
-<!-- Details for <?php the_title(); ?> (post-<?php the_ID(); ?>) -->
-<div id="<?=$title_id?>" class="white_popup <?=(!is_singular('movies') ? 'mfp-hide' : '')?>">
+<!-- Popup for #<?=$post->post_name;?> -->
+<div id="<?=$post->post_name;?>" class="white_popup <?=(!is_singular('movies') ? 'mfp-hide' : '')?>">
 	<?php
 		$meta = get_post_meta(get_the_ID());
 		$meta['genres'] = wp_get_post_terms(get_the_ID(), 'genre');

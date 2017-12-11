@@ -10,16 +10,11 @@
 			while($movies_query->have_posts()): $movies_query->the_post();
 				$meta = get_post_meta(get_the_ID());
 				$meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
-				$title_id = preg_replace("/[^0-9a-zA-Z ]/m", "", get_the_title($post));
-				$title_id = preg_replace("/ /", "-", $title_id);
-				$title_id = strtolower($title_id);
 
 				the_title();
-			  echo ' ('.$meta['rating'][0].')'."\r\n";
+			  echo (!empty($meta['rating']) ? ' ('.$meta['rating'][0].')'."\r\n" : "\r\n");
 			  echo "------------------------------\r\n";
-			  if(count($meta['advisories']) > 0):
-			    echo convert_to_string($meta['advisories'], ', ').'\r\n';
-			  endif;
+				echo (count($meta['advisories']) > 0 ? convert_to_string($meta['advisories'], ', ')."\r\n" : '');
 			  if(!empty($meta['showtimes'][0])):
 			    $showtimes = $meta['showtimes'][0];
 			    $showtimes = htmlspecialchars_decode($showtimes);
@@ -34,7 +29,7 @@
 			    $description = preg_replace("/<br\W*?\/>/", "\r\n", $description);
 			    echo '"'.$description.'"'."\r\n";
 			  endif;
-			  echo $comingsoon_url.'/#'.$title_id."\r\n\r\n";
+			  echo $comingsoon_url.'/#'.$post->post_name."\r\n\r\n";
 
 				unset($meta);
 			endwhile;

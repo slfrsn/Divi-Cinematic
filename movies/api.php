@@ -1,13 +1,5 @@
 <?php
 
-$dev_mode = false;
-
-if ($dev_mode) {
-  ini_set('display_startup_errors', 1);
-  ini_set('display_errors', 1);
-  error_reporting(-1);
-}
-
 $key = 'dc6299fd1adb4e32cf16017eecb33295'; // TMDB API Key
 $urls = array(
   api     => 'https://api.themoviedb.org/3',
@@ -39,7 +31,6 @@ function tmdb($url) {
   } else {
     if (strpos($response, 'status_code') !== false) {
       echo $response;
-      if (!$dev_mode) exit;
     }
     return $response;
   }
@@ -60,7 +51,6 @@ if ($status) {
 	$test['request'] = tmdb($urls['api'].'/authentication/token/new?api_key='.$key);
 	$test['decoded'] = json_decode($test['request'],true);
   $test['status']  = isset($test['decoded']['success']) ? 'online' : 'offline';
-   // Return the status of the API to our movie edit page
   echo json_encode(array('status' => $test['status']));
 }
 
@@ -90,9 +80,6 @@ if ($tmdb) {
 	$request = tmdb($urls['api'].'/movie/'.$tmdb.'?api_key='.$key.'&language=en-US&append_to_response=videos,credits,release_dates');
 	$movie = json_decode($request, true);
 
-  if ($dev_mode) { echo '<strong>Movie Summary Request</strong><br>'.json_encode($movie).'<br><br>'; }
-
-	// Prepare content variables
 	$title    = (!empty($movie['title']) ? $movie['title'] : null);
 	$year     = (!empty($movie['release_date']) ? intval(date('Y', strtotime($movie['release_date']))) : null);
 	$duration = (!empty($movie['runtime']) ? $movie['runtime'] : null);
@@ -144,7 +131,6 @@ if ($tmdb) {
 	  )
 	);
 
-  if ($dev_mode) { echo '<strong>Output to WordPress</strong><br>'; }
 	echo json_encode($json_output);
 }
 

@@ -177,6 +177,26 @@ if (!function_exists('movies_post_type')) {
 			    )
 				)
 			);
+		} elseif ($status == 'popups') {
+			return array (
+				'post_type'  => 'movies',
+				'meta_query' => array(
+			    array(
+			      'key'    => 'listing_type',
+			      'value'  => 'popup'
+			    )
+				)
+			);
+		} elseif ($status == 'widget') {
+			return array (
+				'post_type'  => 'movies',
+				'meta_query' => array(
+					array(
+						'key'   => 'listing_type',
+						'value' => 'widget'
+					)
+				)
+			);
 		}
 	}
 
@@ -219,8 +239,12 @@ if (!function_exists('movies_post_type')) {
 				break;
 			case 'status':
 				$start_date = get_post_meta($post_ID, 'start_date', true);
-				$start_week = (int)date('W', $start_date);
 				$end_date = get_post_meta($post_ID, 'end_date', true);
+				if (empty($start_date) || empty($end_date)) {
+					echo '<span style="color:#a00;">Start and end dates are required</span>';
+					break;
+				}
+				$start_week = (int)date('W', $start_date);
 				$listing_type = get_post_meta($post_ID, 'listing_type', true);
 				$current_date = strtotime('today');
 				$current_week = (int)date('W', $current_date);
@@ -241,7 +265,7 @@ if (!function_exists('movies_post_type')) {
 				if ($showtimes) {
 					echo '<span data-meta="'.$showtimes.'">'.$showtimes.'</span>';
 				} else {
-					echo '<span data-meta="" style="color:#a00;">No data entered</span>';
+					echo '<span data-meta="" style="color:#a00;">No showtimes entered</span>';
 				}
 				break;
 			case 'featured_image':
@@ -360,14 +384,14 @@ if (!function_exists('movies_post_type')) {
 					<label>
 						<span class="title">Showtimes</span>
 						<span class="input-text-wrap">
-							<span class=""><strong>Note:</strong> for the sake of simplicity, quick edit will load the HTML view.</span>
+							<span class=""><strong>Note:</strong> due to limitations, quick edit will load the raw HTML only.</span>
 							<textarea name="showtimes"></textarea>
 						</span>
 					</label>
 					<label>
 						<span class="title">Notes</span>
 						<span class="input-text-wrap">
-							<span class=""><strong>Note:</strong> for the sake of simplicity, quick edit will load the HTML view.</span>
+							<span class=""><strong>Note:</strong> due to limitations, quick edit will load the raw HTML only.</span>
 							<textarea name="notes"></textarea>
 						</span>
 					</label>
@@ -385,20 +409,24 @@ if (!function_exists('movies_post_type')) {
 	// Remove slugs, add Movie Poster
 	add_action('do_meta_boxes', 'movie_metaboxes');
 	function movie_metaboxes() {
+		global $post;
 		remove_meta_box('slugdiv', 'movies', 'normal');
 		remove_meta_box('postimagediv', 'movies', 'side');
 		add_meta_box('postimagediv', 'Poster', 'post_thumbnail_meta_box', 'movies', 'side', 'high');
-	}
-
-	// Change 'Set featured image' text
-	add_filter('admin_post_thumbnail_html', 'custom_admin_post_thumbnail_html');
-	function custom_admin_post_thumbnail_html($content) {
-    global $post;
-    if ('movies' == $post->post_type) {
-			$content = str_replace('Set featured image', 'Upload Poster Image', $content);
-			$content = str_replace('Remove featured image', 'Remove Poster Image', $content);
-    }
-    return $content;
+		if(!empty($post)) {
+			if(get_post_meta($post->ID, '_wp_page_template', true) == 'page-movies.php') {
+				remove_meta_box('et_settings_meta_box', 'page', 'side');
+				add_meta_box(
+					'movie_page_settings',
+					'Movie Page Settings',
+					'movie_page_settings_content',
+					'page',
+					'side',
+					'high'
+				);
+				remove_meta_box('et_settings_meta_box', 'page', 'side');
+			}
+		}
 	}
 
 	require_once('widget.php');
@@ -409,6 +437,7 @@ if (!function_exists('movies_post_type')) {
 
 	add_action('add_meta_boxes', 'movie_listing_details');
 	function movie_listing_details() {
+		global $post;
 		add_meta_box(
 			'movie_schedule',
 			'Schedule',
@@ -460,6 +489,7 @@ if (!function_exists('movies_post_type')) {
 	}
 
 	// Include the separate metabox files
+	require_once('metaboxes/settings.php');
 	require_once('metaboxes/schedule.php');
 	require_once('metaboxes/details.php');
 	require_once('metaboxes/links.php');
@@ -616,7 +646,7 @@ if (!function_exists('movies_post_type')) {
 	// Enqueue the script for loading movie details in a popup
 	add_action('wp_enqueue_scripts', 'page_movies_script');
 	function page_movies_script() {
-    if (is_page_template('page-movies.php') ||  is_active_widget('', '', 'divicinematicmovie_widget')) {
+    if (is_page_template('page-movies.php') || is_active_widget('', '', 'divicinematicmovie_widget')) {
 			wp_enqueue_script('page_movies', get_stylesheet_directory_uri() . '/assets/js/page-movies.js');
 		}
 	}

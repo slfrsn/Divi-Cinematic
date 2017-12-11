@@ -1,11 +1,11 @@
 /*
 Theme Name:       Divi Cinematic
-Description:      A modified version of Divi commissioned for a Canadian theatre. Has a robust movie listing post type that automatically retrieves movie details, poster, etc.
+Description:      A modified version of Divi, commissioned for a Canadian theatre. Has a robust movie listing post type that automatically retrieves movie details, poster, etc.
 Author:           slfrsn
 Author URI:       https://github.com/slfrsn
 Theme URI:        https://github.com/slfrsn/Divi-Cinematic/
-Template:         divi
-Version:          1.6.1
+Template:         Divi
+Version:          2.0.0
 
 CSS Structure
 ----------------
@@ -79,10 +79,6 @@ CSS Structure
   .movie_notes {
     background-color: #333;
   }
-  .movie-popup .movie_details h2:before {
-    content: 'Special Showing: ';
-    font-weight: bold;
-  }
   /* The actual visible popup container */
   .white_popup {
     position: relative;
@@ -104,6 +100,10 @@ CSS Structure
   .white_popup_bottom {
     clear: both;
     line-height: 0;
+    background: #000;
+  }
+  .mfp-wrap .mfp-close:active {
+    top: 0;
   }
 
   /*=======================*/
@@ -464,20 +464,39 @@ CSS Structure
     }
     #main-content {
       min-height: 0; /* Let the poster rows fill the content area */
-      background: #000 !important;
     }
     #poster-row {
       width: 100% !important;
     }
     .poster {
       float: left;
-      min-width: 50%; /* We don't want more than 4 posters per row in mobile view */
+      width: 50% !important;
+      overflow: hidden;
       /* Remove the transforms to straighten them out */
       transform: none !important;
       -webkit-transform: none !important;
       -moz-transform: none !important;
       -o-transform: none !important;
       -ms-transform: none !important;
+    }
+    .poster img {
+      width: 50%;
+      height: auto;
+      width: 50vw;
+      height: 75vw;
+      -moz-transition: transform 0.2s ease-in-out;
+      -webkit-transition: transform 0.2s ease-in-out;
+      transition: transform 0.2s ease-in-out;
+    }
+    .poster img:hover {
+      transform: scale(1.1) !important;
+      -webkit-transform: scale(1.1) !important;
+      -moz-transform: scale(1.1) !important;
+      -o-transform: scale(1.1) !important;
+      -ms-transform: scale(1.1) !important;
+    }
+    #poster-row li {
+      line-height: 0%;
     }
   }
 
@@ -525,10 +544,7 @@ CSS Structure
   /*===================*/
 
   @media only screen and (max-width: 767px) {
-    /* Movie popup poster should fill the popup width */
     .movie_poster img {
-      margin-bottom: 30px;
-      margin-top: 20px;
-      width: 100%;
+      display: none;
     }
 }

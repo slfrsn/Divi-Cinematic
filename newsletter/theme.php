@@ -37,12 +37,33 @@
                       $movies_query->the_post();
                       $meta = get_post_meta(get_the_ID());
                       $meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
-                      $title_id = preg_replace("/[^0-9a-zA-Z ]/m", "", get_the_title($post));
-                      $title_id = preg_replace("/ /", "-", $title_id);
-                      $title_id = strtolower($title_id);
                       include('partials/listing.php');
                       include('partials/divider.php');
                       unset($meta);
+                    }
+                    if ($include_popups) {
+                      if ($popups_movies_query->have_posts()) {
+                        while($popups_movies_query->have_posts()) {
+                          $popups_movies_query->the_post();
+                          $meta = get_post_meta(get_the_ID());
+                          $meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
+                          include('partials/listing.php');
+                          include('partials/divider.php');
+                          unset($meta);
+                        }
+                      }
+                    }
+                    if ($include_widget) {
+                      if ($widget_movies_query->have_posts()) {
+                        while($widget_movies_query->have_posts()) {
+                          $widget_movies_query->the_post();
+                          $meta = get_post_meta(get_the_ID());
+                          $meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
+                          include('partials/listing.php');
+                          include('partials/divider.php');
+                          unset($meta);
+                        }
+                      }
                     }
                   } else {
                     include('partials/no-listings.php');

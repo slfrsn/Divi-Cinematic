@@ -149,9 +149,13 @@ body,
 	font-weight: bold;
 	text-decoration: none;
 }
+.listingImage,
 .listingImage img {
 	max-width: 150px;
 	width: 150px;
+	height: auto;
+}
+.listingImage img {
 	height: auto;
 }
 .listingContent {

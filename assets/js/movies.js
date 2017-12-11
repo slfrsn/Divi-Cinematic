@@ -45,6 +45,14 @@ jQuery(document).ready(function($){
 	  return false;
 	};
 
+	$('#movie_search').focus();
+	$('#movie_search').keypress(function (e) {
+	  if (e.which == 13) {
+	    $('#load_movie').click();
+	    return false;
+	  }
+	});
+
 	function submit_movie(tmdb) {
 		set_status_light(0, '', 'Fetching...', '', false);
 		var dataMovie = {

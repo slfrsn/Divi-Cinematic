@@ -6,6 +6,8 @@
 	$accent_colour = (empty($theme_options['theme_accent_colour']) ? '#222222' : $theme_options['theme_accent_colour']);
 	$accent_text_colour = (empty($theme_options['theme_accent_text_colour']) ? '#FFFFFF' : $theme_options['theme_accent_text_colour']);
 	$include_movies = (isset($theme_options['theme_include_movies']) ? true : false);
+	$include_popups = (isset($theme_options['theme_include_popups']) ? true : false);
+	$include_widget = (isset($theme_options['theme_include_widget']) ? true : false);
 	$comingsoon_url = (empty($theme_options['theme_comingsoon_url']) ? '' : $theme_options['theme_comingsoon_url']);
 	$disable_social = (isset($theme_options['theme_disable_links']) ? true : false);
 	$website_title = (empty($theme_options['theme_website_title']) ? '' : $theme_options['theme_website_title']);
@@ -22,5 +24,12 @@
 		$end_date = date('F j, Y',strtotime('next '.get_theme_mod('movie_changeover_day', 'Friday').' +6 days'));
 		$theme_subject = 'Movies playing '.$start_date.' to '.$end_date;
 		$movies_query = new WP_Query($movies_args);
+		if ($include_popups) {
+			$popups_movies_query = new WP_Query(movies_query_args('popups'));
+		}
+		if ($include_widget) {
+			$widget_movies_query = new WP_Query(movies_query_args('widget'));
+		}
 	}
+
 ?>

@@ -3,36 +3,34 @@
 /* Template Name: Movie Page */
 
 get_header();
-$is_page_builder_used = et_pb_is_pagebuilder_used(get_the_ID());
 
-// ====================
-// LOAD THE MOVIE LOOP
-// ====================
+$page_object = get_queried_object();
+$page_id = get_queried_object_id();
+$page_meta = get_post_meta($page_id);
 
-global $post;
-$meta = get_post_meta(get_the_ID());
-$movies_args = movies_query_args($meta['status'][0]);
+// Set a javascript variable containing the page address (for use when resetting the pushState after closing magnificPopup)
+echo '<script>var page_url = "'.strtok(get_permalink($page_object, false), '?').'"</script>';
+
+if (!empty($page_meta['page_type'])) {
+	$movies_args = movies_query_args($page_meta['page_type'][0]);
+} else if (isset($page_meta['status'])) {
+	$movies_args = movies_query_args($page_meta['status'][0]);
+} else {
+	$movies_args = movies_query_args('nowplaying');
+}
 $movies_query = new WP_Query($movies_args); ?>
 
 <div id="main-content" style="background-color: <?=et_get_option('secondary_nav_bg')?>">
 	<div class="container">
 		<div id="content-area" class="clearfix">
 
-			<?php
-				$counter = 0;
-				$count = $movies_query->post_count;
-			?>
+			<?php $counter = 0; $count = $movies_query->post_count; ?>
 
-			<ul id="poster-row" style="width: <?=(($count < 4 && $count > 0) ? $count*30 : '100')?>%; margin: 0 auto;">
-
-				<?php
-				if ($movies_query->have_posts()) :
+				<?php if ($movies_query->have_posts()) : ?>
+					<ul id="poster-row" style="width: <?=(($count < 4 && $count > 0) ? $count*30 : '100')?>%; margin: 0 auto;">
+					<?php
 					while($movies_query->have_posts()) : $movies_query->the_post();
 					++$counter;
-
-					$title_id = preg_replace("/[^0-9a-zA-Z ]/m", "", get_the_title($post));
-					$title_id = preg_replace("/ /", "-", $title_id);
-					$title_id = strtolower($title_id);
 
 					// Check if the number of movies is even or odd and calculate position adjustments.
 					if ($count % 2 == 0) {
@@ -102,9 +100,9 @@ $movies_query = new WP_Query($movies_args); ?>
 
 					?>
 
-					<!-- Poster for <?php the_title(); ?> (<?=$title_id?>) -->
-					<li id="<?=$title_id?>-link" class="post-<?php the_ID(); ?> poster count-<?=$count?>" style="<?=$css?>">
-						<a href="#<?=$title_id?>" class="details_popup">
+					<!-- Poster for #<?=$post->post_name;?> -->
+					<li id="<?=$post->post_name;?>-link" class="post-<?php the_ID(); ?> poster count-<?=$count?>" style="<?=$css?>">
+						<a href="#<?=$post->post_name;?>" class="details_popup">
 							<?=get_the_post_thumbnail($post->ID, 'large', array('class' => ''))?>
 						</a>
 						<?php
@@ -113,16 +111,14 @@ $movies_query = new WP_Query($movies_args); ?>
 							unset($meta);
 						?>
 					</li>
-				<?php
-					endwhile;
-				else:
-				?>
+				<?php endwhile; ?>
+					</ul><!-- .poster-row -->
+				<?php else: ?>
 				<div class="no-movies">
 					<h1><?php esc_html_e('No movies are currently listed','divi-cinematic'); ?></h1>
 					<p><?php esc_html_e('Please check back later.','divi-cinematic'); ?></p>
 				</div>
 			<?php endif; ?>
-			</ul><!-- .poster-row -->
 		</div> <!-- #content-area -->
 	</div> <!-- .container -->
 	<?php include(locate_template('partials/popups.php')); ?>

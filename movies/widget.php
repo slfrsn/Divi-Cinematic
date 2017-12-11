@@ -16,15 +16,7 @@
 		$image = empty($instance['image']) ? '' : esc_url($instance['image']);
 
 		global $post;
-		$widget_args = array (
-			'post_type'  => 'movies',
-			'meta_query' => array(
-		    array(
-		      'key'   => 'listing_type',
-		      'value' => 'widget'
-		    )
-			)
-		);
+		$widget_args = movies_query_args('widget');
 		$widget_query = new WP_Query($widget_args);
 
 		echo $before_widget;
@@ -40,9 +32,8 @@
 				$meta = get_post_meta(get_the_ID());
 				++$counter;
 			?>
-
-				<li id="post-<?php the_ID(); ?>" class="post-<?php the_ID(); ?>" style="<?=($counter != $random ? 'display:none' : '')?>">
-					<a href="#post-<?php the_ID(); ?>-details" class="details_popup">
+				<li id="<?=$post->post_name;?>-link" class="post-<?php the_ID(); ?>" style="<?=($counter != $random ? 'display:none' : '')?>">
+					<a href="#<?=$post->post_name;?>" class="details_popup">
 					<?php if (!empty($meta['listing_label'][0]) && $check == 1): ?>
 						<div style="background-color: <?=et_get_option('primary_nav_bg')?>; border-color: <?=et_get_option('primary_nav_bg')?>">
 							<h4><?=$meta['listing_label'][0]?></h4>

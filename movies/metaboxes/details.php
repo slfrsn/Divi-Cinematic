@@ -18,27 +18,27 @@ function movie_details_content($post) {
 	<p>
 		<label>
 			<input type="radio" name="rating" value="G" <?=echo_checkbox($meta['rating'][0],'G')?>>
-			<img src="<?=$ratings_directory?>/g.png" class="rating-icon" title="G">
+			<img src="<?=$ratings_directory?>/G.png" class="rating-icon" title="G">
 		</label>
 		<label>
 			<input type="radio" name="rating" value="PG" <?=echo_checkbox($meta['rating'][0],'PG')?>>
-			<img src="<?=$ratings_directory?>/pg.png" class="rating-icon" title="PG">
+			<img src="<?=$ratings_directory?>/PG.png" class="rating-icon" title="PG">
 		</label>
 		<label>
 			<input type="radio" name="rating" value="14A" <?=echo_checkbox($meta['rating'][0],'14A')?>>
-			<img src="<?=$ratings_directory?>/14a.png" class="rating-icon" title="14A">
+			<img src="<?=$ratings_directory?>/14A.png" class="rating-icon" title="14A">
 		</label>
 		<label>
 			<input type="radio" name="rating" value="18A" <?=echo_checkbox($meta['rating'][0],'18A')?>>
-			<img src="<?=$ratings_directory?>/18a.png" class="rating-icon" title="18A">
+			<img src="<?=$ratings_directory?>/18A.png" class="rating-icon" title="18A">
 		</label>
 		<label>
 			<input type="radio" name="rating" value="R" <?=echo_checkbox($meta['rating'][0],'R')?>>
-			<img src="<?=$ratings_directory?>/r.png" class="rating-icon" title="R">
+			<img src="<?=$ratings_directory?>/R.png" class="rating-icon" title="R">
 		</label>
 		<label>
 			<input type="radio" name="rating" value="A" <?=echo_checkbox($meta['rating'][0],'A')?>>
-			<img src="<?=$ratings_directory?>/a.png" class="rating-icon" title="A">
+			<img src="<?=$ratings_directory?>/A.png" class="rating-icon" title="A">
 		</label>
 		<?php if (isset($meta['json_response'])) { ?>
 			<a class="button" id="rating-confirm">Confirm Film Rating</a><span id="rating-spinner" class="spinner"></span>
