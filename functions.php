@@ -1,8 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Set a global timezone for use in our code
 date_default_timezone_set('America/Vancouver');
 
