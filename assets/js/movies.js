@@ -110,7 +110,6 @@ jQuery(document).ready(function($){
 				if (json && json.length > 1) {
 					var suggestions = '<div class="categorydiv" id="movie-suggestions"><p>Multiple matches found. Please make a selection and press Continue.</p><div class="tabs-panel">';
 					$.each(json, function(i, item) {
-						console.log(json[i]);
 					  suggestions += '<label><input value="' + json[i].id + '" type="radio" name="suggestions" ' + (i == 0 ? 'checked="checked"' : '') + '><strong>' + json[i].year + ':</strong> ' + json[i].title + '</label>';
 					})
 					suggestions += '</div></div>';
@@ -128,47 +127,25 @@ jQuery(document).ready(function($){
 		}
 	});
 
-	// Confirm film rating via AJAX
-  // This scrapes the Consumer Protection BC website to grab the first result
-  // It's pretty ghetto, so we need to make sure it degrades gracefully
-	$('#rating-confirm').click(function(e) {
-		e.preventDefault(); // Prevent the link from doing it's thing
-		$('#rating-spinner').css('visibility','visible');
-		var dataRating = {
-	    action: 'movie_confirm_film_rating',
-      title: $('#title').val()
-		};
-  	$.post(ajaxurl, dataRating, function(response) {
-      $('#rating-spinner').css('visibility','hidden');
-      if(response) {
-        // Find the second cell on the second row of the second table (I know, right?!)
-        var found = $('.searchlicense:eq(2) tr:nth-child(2) td:nth-child(2)', $(response)).html();
-        // Update the response message
-        $('#rating-response span').html('Response received as: ' + found + '. ');
-        // Add the classes and show the message
-        // We add the classes with javascript because if we don't WordPress
-        // will move it to the top of the page
-        $('#rating-response').addClass('notice notice-success').show();
-        // If `found` returns null we need to forward the user to the page
-        if (!found) {
-          $('#rating-response span').html('No response received. ');
-          $('#rating-response').addClass('notice notice-error').show();
-        }
-  		} else {
-        $('#rating-response span').html('No response received. ');
-        $('#rating-response').addClass('notice notice-error').show();
-  		}
-  	});
-	});
-
 	// Prettify the JSON response data if there is any
 	var response = $('#movie_response .inside').html();
 	if ($.trim(response) !== 'No response data.') {
 		$('#movie_response .inside').JSONView(response, { collapsed: true });
 	}
 
-	// Initialize the lazy YouTube embed
-	$('#trailer-frame').lazyYT();
+	// Create and destroy the YouTube trailer when the postbox is open / closed
+  $('#trailer-postbox .hndle').click(function(e) {
+		if ($('#trailer-postbox .postbox').hasClass('closed')) {
+			var src = $('input[name=trailer]').val();
+			var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#\&\?]*).*/;
+			var match = src.match(regExp);
+			var id = (match&&match[7].length==11)? match[7] : false;
+			$('#trailer-inside').append('<div class="js-lazyYT" id="trailer-frame" data-youtube-id="' + id + '" data-ratio="16:9" data-parameters="rel=0&autohide=2&iv_load_policy=3&modestbranding=1&color=white"></div>');
+			$('#trailer-frame').lazyYT();
+		} else {
+			$('#trailer-inside').empty();
+		}
+  });
 
 	// Create and destroy the website iFrame when the postbox is open / closed
   $('#website-postbox .postbox').click(function(e) {

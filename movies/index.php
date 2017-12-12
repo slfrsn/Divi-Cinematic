@@ -518,14 +518,6 @@ if (!function_exists('movies_post_type')) {
 		return 'NA';
 	}
 
-	// Confirm film rating via AJAX
-	add_action('wp_ajax_movie_confirm_film_rating', 'movie_confirm_film_rating_ajax');
-	function movie_confirm_film_rating_ajax() {
-		$cpbc_url = 'http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle='.urlencode(preg_replace("/[^a-zA-Z0-9\s]+/", "",$_POST['title']));
-		echo file_get_contents($cpbc_url);
-		wp_die();
-	}
-
 	// Check API status via AJAX
 	add_action('wp_ajax_movie_api_status', 'movie_api_status_ajax');
 	function movie_api_status_ajax() {

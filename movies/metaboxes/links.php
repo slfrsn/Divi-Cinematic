@@ -22,19 +22,13 @@ function movie_links_content($post) {
 		Yes, this is the correct trailer for this movie.
 	</label>
 
-	<?php if (!empty($trailer) && $trailer != ' ') {
-		// Grab the YouTube ID from the trailer URL
-		$trailer = parse_url($trailer);
-		parse_str($trailer['query'], $query);
-		$trailer = $query['v'];
-	?>
-	<div class="postbox-container">
+	<?php if (!empty($trailer) && $trailer != ' ') { ?>
+	<div id="trailer-postbox" class="postbox-container">
 		<div class="meta-box-sortables">
 			<div class="postbox closed">
-				<div class="handlediv" title="Click to toggle"><br /></div>
+				<button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: External Links</span><span class="toggle-indicator" aria-hidden="true"></span></button>
 				<h3 class='hndle'><span>View Trailer</span></h3>
-				<div class="inside">
-	        <div class="js-lazyYT" id="trailer-frame" data-youtube-id="<?=$trailer?>" data-ratio="16:9" data-parameters="rel=0&autohide=2&iv_load_policy=3&modestbranding=1&color=white"></div>
+				<div id="trailer-inside" class="inside">
 				</div>
 			</div>
 		</div>
@@ -57,7 +51,7 @@ function movie_links_content($post) {
 	<div id="website-postbox" class="postbox-container">
 		<div class="meta-box-sortables">
 			<div class="postbox closed">
-				<div class="handlediv" title="Click to toggle"><br /></div>
+				<button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: External Links</span><span class="toggle-indicator" aria-hidden="true"></span></button>
 				<h3 class='hndle'><span>View Website</span></h3>
 				<div class="inside">
 					<iframe src="" height="600" id="website-frame" frameborder="0" data-src="<?=$website?>"></iframe>
@@ -65,7 +59,7 @@ function movie_links_content($post) {
 			</div>
 		</div>
 	</div>
-	<div class="clear"></div>
+	<p><strong>Hint:</strong> Some websites won't load in a frame. If the preview isn't loading, try copying and pasting the website address into a new tab.</p>
 <?php }
 }
 

@@ -18,18 +18,11 @@ function echo_checkbox(&$var, $value, $default = false) {
 	}
 }
 
-// WordPress debugging function
-// Useful for debugging things like 'save-post'
-if(!function_exists('log_it')){
-  function log_it( $message ) {
-    if( WP_DEBUG === true ){
-      if( is_array( $message ) || is_object( $message ) ){
-        error_log( print_r( $message, true ) );
-      } else {
-        error_log( $message );
-      }
-    }
-  }
+// RFC 3986 URL encoding
+function urlencode_percent($string) {
+  $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
+  $replacements = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
+  return str_replace($entities, $replacements, urlencode($string));
 }
 
 // Shorthand function for input saves in our metaboxes

@@ -41,12 +41,16 @@ function movie_details_content($post) {
 			<img src="<?=$ratings_directory?>/A.png" class="rating-icon" title="A">
 		</label>
 		<?php if (isset($meta['json_response'])) { ?>
-			<a class="button" id="rating-confirm">Confirm Film Rating</a><span id="rating-spinner" class="spinner"></span>
-			<div id="rating-response" class="">
-				<p>
-					<span></span>
-					<a href="http://www.consumerprotectionbc.ca/consumers-film-and-video-homepage/classification-search?submitted=1&featuretitle=<?=urlencode(preg_replace("/[^a-zA-Z0-9\s]+/", "",get_the_title()))?>" target="_blank">Open website to confirm</a>
-				</p>
+			<div class="postbox-container">
+				<div class="meta-box-sortables">
+					<div class="postbox closed">
+						<button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: External Links</span><span class="toggle-indicator" aria-hidden="true"></span></button>
+						<h3 class='hndle'><span>Confirm Film Rating</span></h3>
+						<div class="inside">
+							<iframe src="https://www.consumerprotectionbc.ca/motion-picture-ratings/find-rating/?cpbc_title=<?=urlencode_percent(get_the_title())?>" height="600" id="rating-frame" frameborder="0"></iframe>
+						</div>
+					</div>
+				</div>
 			</div>
 		<?php } ?>
 	</p>
