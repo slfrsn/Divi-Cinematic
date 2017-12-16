@@ -52,11 +52,12 @@ CSS Structure
   .movie_details h2 {
     margin-top: 0;
   }
-  .movie_details p:last-of-type {
-    padding-bottom: 1em;
+  .movie_details > p:last-of-type {
+    padding-bottom: 0;
   }
   .movie_details .et_social_inline {
     margin-bottom: 0;
+    margin-top: 1em;
   }
   .movie_details .et_social_inline ul {
     width: auto !important;
