@@ -25,7 +25,7 @@ jQuery(document).ready(function($){
 
 	// Open a movie popup if requested via GET query
 	function requested_movie(instance, container) {
-		var request = window.location.href.split('#').pop().split('=').pop();
+		var request = window.location.href.split('?movie=').pop();
 		if(request && request.length) {
 			request = $('#' + request);
 			var movie_index = $('.white_popup').index(request);
