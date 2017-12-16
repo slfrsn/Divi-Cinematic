@@ -156,4 +156,14 @@ jQuery(document).ready(function($){
 			$('#website-frame').attr('src', src);
 		}
   });
+
+	// Create and destroy the film rating iFrame when the postbox is open / closed
+	$('#rating-postbox .postbox').click(function(e) {
+		if ($(this).hasClass('closed')) {
+			$('#rating-frame').attr('src', null);
+		} else {
+			var src = $('#rating-frame').data('src');
+			$('#rating-frame').attr('src', src);
+		}
+	});
 });

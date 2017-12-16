@@ -16,6 +16,7 @@ function movie_fetch_details_content($post) {
 					<span id="api_spinner" class="spinner"></span>
 					<span id="api_status">Checking...</span>
 				</span>
+				<a id="new-tutorial" class="button-secondary" title="Click here for a tutorial">Help</a>
 				<a class="button-primary" id="load_movie" data-url="<?=get_stylesheet_directory_uri().'/movies/api.php?status'?>">Search</a>
 			</div>
 		</div>

@@ -41,13 +41,13 @@ function movie_details_content($post) {
 			<img src="<?=$ratings_directory?>/A.png" class="rating-icon" title="A">
 		</label>
 		<?php if (isset($meta['json_response'])) { ?>
-			<div class="postbox-container">
+			<div id="rating-postbox" class="postbox-container">
 				<div class="meta-box-sortables">
 					<div class="postbox closed">
 						<button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: External Links</span><span class="toggle-indicator" aria-hidden="true"></span></button>
 						<h3 class='hndle'><span>Confirm Film Rating</span></h3>
 						<div class="inside">
-							<iframe src="https://www.consumerprotectionbc.ca/motion-picture-ratings/find-rating/?cpbc_title=<?=urlencode_percent(get_the_title())?>" height="600" id="rating-frame" frameborder="0"></iframe>
+							<iframe src="" data-src="https://www.consumerprotectionbc.ca/motion-picture-ratings/find-rating/?cpbc_title=<?=urlencode_percent(get_the_title())?>" height="600" id="rating-frame" frameborder="0"></iframe>
 						</div>
 					</div>
 				</div>

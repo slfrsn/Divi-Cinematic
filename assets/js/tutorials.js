@@ -9,13 +9,13 @@ jQuery(document).ready(function($){
 				showBullets: true,
 	      steps: [
 	        {
-	          element:	'#title',
+	          element:	'#movie_search',
 	          intro: 	 	'Enter the title of the movie here.<br><br><strong>Note:</strong> You can treat this like a Google search. If a movie has been re-made, for example, you can add the year of the remake (e.g. "vacation 2015").',
 						position: 'bottom-right-aligned'
 	        },
 	        {
-	          element: 	'.fetch-details',
-	          intro: 		'Click <strong>Fetch Movie Details</strong>. The page should reload with everything filled out correctly.<br><br><strong>Note:</strong> The API status light gives us a way to see if the source for <strong>Fetch Movie Details</strong> is online. If the light is amber or red, you might be on your own.',
+	          element: 	'#load_movie',
+	          intro: 		'Click <strong>Search</strong>. The page should reload with everything filled out correctly.<br><br><strong>Note:</strong> The API status light gives us a way to see if the <strong>Search</strong> feature is working. If the light is amber or red, you might be on your own.',
 						position: 'left'
 	        },
 	        {
@@ -25,7 +25,7 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element:  '#movie_details',
-	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> If <strong>Fetch Movie Details</strong> failed to assign a film rating, you can check for one by clicking <strong>Confirm Film Rating</strong>.',
+	          intro: 	  'Check the movie details and fill in anything missing or inaccurate.<br><br><strong>Note:</strong> If <strong>Search</strong> failed to assign a film rating, you can check for one by clicking <strong>Confirm Film Rating</strong>.',
 						position: 'right'
 	        },
 	        {
@@ -40,12 +40,12 @@ jQuery(document).ready(function($){
 	        },
 	        {
 	          element:  '#postimagediv',
-	          intro: 	  'If <strong>Fetch Movie Details</strong> failed to assign a movie poster, click <strong>Upload Poster Image</strong> to add one manually. The preferred poster dimensions are <strong>600 x 900</strong>.',
+	          intro: 	  'If <strong>Search</strong> failed to assign a movie poster, click <strong>Set Featured Image</strong> to add one manually. The preferred poster dimensions are <strong>600 x 900</strong>.',
 						position: 'left'
 	        },
 	        {
 	          element:  '#genrediv',
-	          intro: 	  'If <strong>Fetch Movie Details</strong> failed to assign the genres, select them manually here.',
+	          intro: 	  'If <strong>Search</strong> failed to assign the genres, select them manually here.',
 						position: 'left'
 	        },
 	        {

@@ -15,20 +15,10 @@
 			  echo (!empty($meta['rating']) ? ' ('.$meta['rating'][0].')'."\r\n" : "\r\n");
 			  echo "------------------------------\r\n";
 				echo (count($meta['advisories']) > 0 ? convert_to_string($meta['advisories'], ', ')."\r\n" : '');
-			  if(!empty($meta['showtimes'][0])):
-			    $showtimes = $meta['showtimes'][0];
-			    $showtimes = htmlspecialchars_decode($showtimes);
-			    $showtimes = preg_replace( '/^<[^>]+>|<\/[^>]+>$/', '', $showtimes );
-			    $showtimes = preg_replace("/<br\W*?\/>/", "\r\n", $showtimes);
-			    echo $showtimes."\r\n";
-			  endif;
-			  if(!empty($meta['description'][0])):
-			    $description = $meta['description'][0];
-			    $description = htmlspecialchars_decode($description);
-			    $description = preg_replace('/^<[^>]+>|<\/[^>]+>$/', '', $description);
-			    $description = preg_replace("/<br\W*?\/>/", "\r\n", $description);
-			    echo '"'.$description.'"'."\r\n";
-			  endif;
+				format_text_block_plain($meta, 'showtimes', '', "\r\n");
+				format_text_block_plain($meta, 'notes', '', "\r\n");
+				format_text_block_plain($meta, 'description', "\r\n".'"', '"'."\r\n\r\n");
+
 			  echo $comingsoon_url.'/#'.$post->post_name."\r\n\r\n";
 
 				unset($meta);

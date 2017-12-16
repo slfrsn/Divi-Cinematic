@@ -7,12 +7,12 @@ date_default_timezone_set('America/Vancouver');
 require_once('movies/index.php');
 
 // Shorthand function for echoing variables that might not exist
-function echo_var(&$var, $default = false) {
+function echo_var($var, $default = false) {
     return isset($var) ? $var : $default;
 }
 
 // Shorthand function for echoing checkbox values
-function echo_checkbox(&$var, $value, $default = false) {
+function echo_checkbox($var, $value, $default = false) {
 	if (isset($var)) {
 		checked($var, $value);
 	}
@@ -138,16 +138,17 @@ function elegant_description() {
     $movies_query = new WP_Query($movies_args);
     $counter = 0;
 		$count = $movies_query->post_count;
-  	if ($movies_query->have_posts()):
+  	if ($movies_query->have_posts()) {
       $description = $status.': ';
       $count = $movies_query->post_count;
       $counter = 0;
-			while($movies_query->have_posts()) : $movies_query->the_post();
+			while($movies_query->have_posts()) {
+        $movies_query->the_post();
 				++$counter;
         $description .= $post->post_title;
         $description .= ($counter < $count ? ', ' : '');
-      endwhile;
-    endif;
+      }
+    }
 	}
 
   // Single Movies
@@ -161,6 +162,7 @@ function elegant_description() {
     if (!empty($movie_meta['showtimes'][0])) {
       $description = 'Showtimes: '.$movie_meta['showtimes'][0].' / Click here for trailer and more information!';
       $description = str_replace('<br />', ' / ', $description);
+      $description = str_replace('<br>', ' / ', $description);
       $description = strip_tags($description);
     }
     $url = $url.'?movie='.$movie->post_name;
@@ -211,19 +213,10 @@ function automatic_GitHub_updates($data) {
   return $data;
 }
 
-//Dequeue JavaScripts
-// function project_dequeue_unnecessary_scripts() {
-// if (is_page_template('page-movies.php')) {
-//   wp_dequeue_script( 'et_pb_admin_js' );
-//   wp_deregister_script( 'et_pb_admin_js' );
-//     }
-// }
-// add_action('wp_print_scripts', 'project_dequeue_unnecessary_scripts');
-
 // Enqueue the scripts and stylesheets for our interactive tutorials
 add_action('admin_enqueue_scripts', 'tutorial_scripts', 10, 1);
 function tutorial_scripts($hook) {
-  if($hook === 'edit.php') {
+  if($hook === 'edit.php' || $hook === 'post.php' || $hook === 'post-new.php') {
     wp_enqueue_style ( 'tutorial-intro-css', get_stylesheet_directory_uri() . '/assets/css/intro.css' );
   	wp_enqueue_style ( 'tutorial-intro-theme-css', get_stylesheet_directory_uri() . '/assets/css/intro-theme.css' );
     wp_enqueue_script( 'tutorial_intro', get_stylesheet_directory_uri() . '/assets/js/intro.js' );

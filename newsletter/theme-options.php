@@ -34,10 +34,12 @@
       <th>Movies</th>
       <td>
         <?php $controls->checkbox('theme_include_movies', 'Show movie listings'); ?><br>
-        <div style="margin-left: 23px">
+        <div style="margin-left: 23px; margin-bottom: 10px;">
           <?php $controls->checkbox('theme_include_popups', 'Include popup listings'); ?><br>
-          <?php $controls->checkbox('theme_include_widget', 'Include widget listings'); ?>
+          <?php $controls->checkbox('theme_include_widget', 'Include widget listings'); ?><br>
         </div>
+        <label><?php $controls->radio('theme_display_type', 'nowplaying'); ?>Now Playing</label>
+        <label><?php $controls->radio('theme_display_type', 'comingsoon'); ?>Coming Soon</label>
       </td>
     </tr>
     <tr>

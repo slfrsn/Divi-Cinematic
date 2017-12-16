@@ -15,22 +15,9 @@
 						<?=(count($meta['advisories']) > 0 ? '<br><em>'.convert_to_string($meta['advisories'], ', ').'</em>' : '')?>
           </p>
 					<?php
-          if(!empty($meta['showtimes'][0])):
-            echo '<p><span>';
-   					$showtimes = $meta['showtimes'][0];
-   					$showtimes = htmlspecialchars_decode($showtimes);
-   					$showtimes = preg_replace( '/^<[^>]+>|<\/[^>]+>$/', '', $showtimes );
-   					echo $showtimes;
-            echo '</span></p>';
-   				endif;
-          if(!empty($meta['description'][0])):
-            echo '<p><span>';
-   					$description = $meta['description'][0];
-   					$description = htmlspecialchars_decode($description);
-   					$description = preg_replace('/^<[^>]+>|<\/[^>]+>$/', '', $description);
-   					echo $description;
-            echo '</span></p>';
-   				endif;
+						format_text_block_html($meta, 'showtimes');
+						format_text_block_html($meta, 'notes');
+						format_text_block_html($meta, 'description');
    				?>
           <table border="0" cellpadding="0" cellspacing="0">
           	<tbody>

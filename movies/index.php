@@ -478,14 +478,6 @@ if (!function_exists('movies_post_type')) {
 			'normal',
 			'low'
 		);
-		add_meta_box(
-			'movie_tutorials',
-			'Tutorials',
-			'movie_tutorials_content',
-			'movies',
-			'side',
-			'high'
-		);
 	}
 
 	// Include the separate metabox files
@@ -495,7 +487,6 @@ if (!function_exists('movies_post_type')) {
 	require_once('metaboxes/links.php');
 	require_once('metaboxes/fetch.php');
 	require_once('metaboxes/response.php');
-	require_once('metaboxes/tutorials.php');
 
 	// =============================
 	// FETCH MOVIE DETAILS

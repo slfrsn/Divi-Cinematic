@@ -5,7 +5,7 @@ Author:           slfrsn
 Author URI:       https://github.com/slfrsn
 Theme URI:        https://github.com/slfrsn/Divi-Cinematic/
 Template:         Divi
-Version:          2.0.1
+Version:          2.1.0
 
 CSS Structure
 ----------------
@@ -49,18 +49,29 @@ CSS Structure
   /* - MOVIE LISTING POPUP */
   /*=======================*/
 
-  .movie_details {
-    margin-bottom: 20px;
-  }
   .movie_details h2 {
     margin-top: 0;
+  }
+  .movie_details p:last-of-type {
+    padding-bottom: 1em;
+  }
+  .movie_details .et_social_inline {
+    margin-bottom: 0;
+  }
+  .movie_details .et_social_inline ul {
+    width: auto !important;
+  }
+  .movie_details .et_social_inline .share_label {
+    font-weight: bold;
+    float: left;
+    margin-top: 12px;
+    margin-right: 5px;
   }
   .movie_info { /* Contains the showtimes, notes, etc. */
     font-size: 18px;
     line-height: 26px;
     color: #eee;
     background: #000;
-    margin-bottom: 20px;
     position: relative;
   }
   .movie_info div {
@@ -508,7 +519,6 @@ CSS Structure
     .movie_details {
       max-width: 75%;
       padding-left: 20px;
-      margin-bottom: 0;
     }
     .movie_details, .movie_poster {
       float: left;
@@ -516,6 +526,7 @@ CSS Structure
     }
     .movie_info {
       display: inline-block;
+      margin-bottom: 20px;
     }
     .movie_poster {
       max-width: 25%;

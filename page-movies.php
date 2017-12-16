@@ -7,9 +7,10 @@ get_header();
 $page_object = get_queried_object();
 $page_id = get_queried_object_id();
 $page_meta = get_post_meta($page_id);
+$page_url = strtok(get_permalink($page_object, false), '?');
 
 // Set a javascript variable containing the page address (for use when resetting the pushState after closing magnificPopup)
-echo '<script>var page_url = "'.strtok(get_permalink($page_object, false), '?').'"</script>';
+echo '<script>var page_url = "'.$page_url.'"</script>';
 
 if (!empty($page_meta['page_type'])) {
 	$movies_args = movies_query_args($page_meta['page_type'][0]);

@@ -25,4 +25,25 @@
 					 	margin-bottom:'.$bottom.';mso-margin-bottom-alt:'.$bottom.';
 					 	margin-left:'.$left.';mso-margin-left-alt:'.$left.';';
 	}
+	function format_text_block_plain($object, $property, $prefix, $suffix) {
+		if(!empty($object[$property][0])):
+			$value = $object[$property][0];
+			$value = htmlspecialchars_decode($value);
+			$value = preg_replace( '/^<[^>]+>|<\/[^>]+>$/', '', $value );
+			$value = preg_replace("/<br\W*?\/>/", "\r\n", $value);
+			echo $prefix.strip_tags($value).$suffix;
+			unset($object);
+		endif;
+	}
+	function format_text_block_html($object, $property) {
+		if(!empty($object[$property][0])):
+			echo '<p><span>';
+			$value = $object[$property][0];
+			$value = htmlspecialchars_decode($value);
+			$value = preg_replace( '/^<[^>]+>|<\/[^>]+>$/', '', $value );
+			echo $value;
+			echo '</span></p>';
+		endif;
+	}
+
 ?>
