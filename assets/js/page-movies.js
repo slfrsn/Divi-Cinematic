@@ -25,12 +25,14 @@ jQuery(document).ready(function($){
 
 	// Open a movie popup if requested via GET query
 	function requested_movie(instance, container) {
-		var request = window.location.href.split('?movie=').pop();
-		if(request && request.length) {
-			request = $('#' + request);
-			var movie_index = $('.white_popup').index(request);
-			if ($(container).find(request).length > 0) {
-				instance.magnificPopup('open', movie_index);
+		if (window.location.href.indexOf('?movie=') >= 0) {
+			var request = window.location.href.split('?movie=').pop();
+			if(request.length) {
+				request = $('#' + request);
+				var movie_index = $('.white_popup').index(request);
+				if ($(container).find(request).length > 0) {
+					instance.magnificPopup('open', movie_index);
+				}
 			}
 		}
 	}
