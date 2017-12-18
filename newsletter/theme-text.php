@@ -19,7 +19,7 @@
 				format_text_block_plain($meta, 'notes', '', "\r\n");
 				format_text_block_plain($meta, 'description', "\r\n".'"', '"'."\r\n\r\n");
 
-			  echo $comingsoon_url.'/#'.$post->post_name."\r\n\r\n";
+			  echo $comingsoon_url.'/?movie='.$post->post_name."\r\n\r\n";
 
 				unset($meta);
 			endwhile;

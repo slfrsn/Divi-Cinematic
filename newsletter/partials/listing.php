@@ -23,7 +23,7 @@
           	<tbody>
           		<tr>
           			<td align="center" valign="middle" class="button">
-                  <a href="<?=$comingsoon_url.'/#'.$post->post_name?>" style="color:<?=$accent_text_colour?>;" title="Watch Trailer">Watch Trailer</a>
+                  <a href="<?=$comingsoon_url.'/?movie='.$post->post_name?>" style="color:<?=$accent_text_colour?>;" title="Watch Trailer">Watch Trailer</a>
                 </td>
           		</tr>
           	</tbody>
