@@ -35,6 +35,7 @@
       <td>
         <?php $controls->checkbox('theme_include_movies', 'Show movie listings'); ?><br>
         <div style="margin-left: 23px; margin-bottom: 10px;">
+          <?php $controls->checkbox('theme_include_scheduled', 'Include scheduled listings'); ?><br>
           <?php $controls->checkbox('theme_include_popups', 'Include popup listings'); ?><br>
           <?php $controls->checkbox('theme_include_widget', 'Include widget listings'); ?><br>
         </div>

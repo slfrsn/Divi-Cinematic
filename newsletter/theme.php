@@ -41,7 +41,22 @@
                       include('partials/divider.php');
                       unset($meta);
                     }
-                    if ($include_popups) {
+					$listing_count = $movies_query->post_count;
+                  }
+				    if ($include_scheduled) {
+                      if ($scheduled_movies_query->have_posts()) {
+                        while($scheduled_movies_query->have_posts()) {
+                          $scheduled_movies_query->the_post();
+                          $meta = get_post_meta(get_the_ID());
+                          $meta['advisories'] = wp_get_post_terms(get_the_ID(), 'advisory');
+                          include('partials/listing.php');
+                          include('partials/divider.php');
+                          unset($meta);
+                        }
+						$listing_count = $scheduled_movies_query->post_count;
+                      }
+                    }
+					if ($include_popups) {
                       if ($popups_movies_query->have_posts()) {
                         while($popups_movies_query->have_posts()) {
                           $popups_movies_query->the_post();
@@ -51,8 +66,9 @@
                           include('partials/divider.php');
                           unset($meta);
                         }
-                      }
+						$listing_count = $popups_movies_query->post_count;
                     }
+					}
                     if ($include_widget) {
                       if ($widget_movies_query->have_posts()) {
                         while($widget_movies_query->have_posts()) {
@@ -63,12 +79,13 @@
                           include('partials/divider.php');
                           unset($meta);
                         }
-                      }
+						$listing_count = $widget_movies_query->post_count;
                     }
-                  } else {
-                    include('partials/no-listings.php');
-                    include('partials/divider.php');
-                  }
+					if ($listing_count == 0) {
+                    	include('partials/no-listings.php');
+                    	include('partials/divider.php');
+					}
+ 					}
                 } else {
                   include('partials/divider.php');
                   include('partials/text.php');

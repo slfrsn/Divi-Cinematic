@@ -177,6 +177,18 @@ if (!function_exists('movies_post_type')) {
 			    )
 				)
 			);
+		} elseif ($status == 'scheduled') {
+			return array (
+				'post_type'		=> 'movies',
+				'post_status' => array('future'),
+				'meta_query'  => array(
+		      	array(
+				    'key' 		=> 'listing_type',
+					'value'		=> array('popup','widget'),
+					'compare' => 'NOT IN'
+			    )
+				)
+			);
 		} elseif ($status == 'popups') {
 			return array (
 				'post_type'  => 'movies',
